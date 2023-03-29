@@ -1,5 +1,7 @@
 # Learn MongoDB
 
+![npm](https://img.shields.io/npm/dw/learn-mongodb)
+
 ## Connect & Check version -
 
 ```bash
