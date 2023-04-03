@@ -2,6 +2,8 @@
 
 ![npm](https://img.shields.io/npm/dw/learn-mongodb)
 
+**MongoDB** is a document database designed for ease of application development and scaling. It stores data in a type of JSON format called BSON.
+
 ## Connect & Check version -
 
 ```bash
@@ -10,7 +12,62 @@ mongosh
 mongod
 ```
 
-### **Database Commands**
+## MongoDB CRUD Operations
+
+Create Operations
+
+```bash
+db.collection.insetOne()
+
+db.collection.insetMany()
+```
+
+Read Operations
+
+```bash
+db.collection.find()
+```
+
+Update Operations
+
+```bash
+db.collection.updateOne()
+
+db.collection.updateMany()
+
+db.collection.replaceOne()
+```
+
+Delete Operations
+
+```bash
+db.collection.deleteOne()
+
+db.collection.deleteMany()
+```
+
+## Data Models
+
+## Indexes
+
+## Connecting to nodejs
+
+```bash
+const mongoose = require('mongoose');
+
+mongoose
+  .connect(
+    `mongodb+srv://USERNAME:PASSWORD@cluster0.re3ha3x.mongodb.net/learn-mongodb`
+  )
+  .then(() => {
+    console.log("Connected to MongoDB database!");
+  })
+  .catch(() => {
+    console.log("Connection failed!");
+  });
+```
+
+## Database Commands
 
 View all databases
 
