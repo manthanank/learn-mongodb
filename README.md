@@ -1,5 +1,7 @@
 # Learn MongoDB
 
+![npm](https://img.shields.io/npm/dw/learn-mongodb)
+
 **MongoDB** is a document database designed for ease of application development and scaling. It stores data in a type of JSON format called BSON.
 
 ## Connect & Check version -
