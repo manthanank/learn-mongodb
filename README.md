@@ -1,6 +1,8 @@
 # Learn MongoDB
 
-![npm](https://img.shields.io/npm/dw/learn-mongodb)
+[![NPM Package](https://github.com/manthanank/learn-mongodb/actions/workflows/publish.yml/badge.svg)](https://github.com/manthanank/learn-mongodb/actions/workflows/publish.yml)
+[![Releases](https://github.com/manthanank/learn-mongodb/actions/workflows/releases.yml/badge.svg)](https://github.com/manthanank/learn-mongodb/actions/workflows/releases.yml)
+[![Npm package total downloads](https://badgen.net/npm/dt/learn-mongodb)](https://npmjs.com/package/learn-mongodb)
 
 **MongoDB** is a document database designed for ease of application development and scaling. It stores data in a type of JSON format called BSON.
 
