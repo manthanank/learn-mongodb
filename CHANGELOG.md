@@ -1,4 +1,13 @@
-# 1.1.0 (2023-04-03)
+## [1.1.1](https://github.com/manthanank/learn-mongodb/compare/v1.1.0...v1.1.1) (2023-04-04)
+
+
+### Bug Fixes
+
+* Update releases.yml ([709beff](https://github.com/manthanank/learn-mongodb/commit/709beff09527c559d7e9b1bdd80ccb944482b495))
+
+
+
+# [1.1.0](https://github.com/manthanank/learn-mongodb/compare/8cd6dbd4f1da809b0fff32bc7a43f4fb0fa8426a...v1.1.0) (2023-04-03)
 
 
 ### Features
