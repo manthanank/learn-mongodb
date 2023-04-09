@@ -1,3 +1,12 @@
+# [1.4.0](https://github.com/manthanank/learn-mongodb/compare/v1.3.0...v1.4.0) (2023-04-09)
+
+
+### Features
+
+* updated package file ([471cab5](https://github.com/manthanank/learn-mongodb/commit/471cab58362e106efff7e005df7a805fb0e724e2))
+
+
+
 # [1.3.0](https://github.com/manthanank/learn-mongodb/compare/v1.2.0...v1.3.0) (2023-04-09)
 
 
