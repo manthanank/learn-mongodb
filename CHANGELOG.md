@@ -1,3 +1,12 @@
+## [1.5.1](https://github.com/manthanank/learn-mongodb/compare/v1.5.0...v1.5.1) (2023-04-09)
+
+
+### Bug Fixes
+
+* delete releases json file ([3ce798c](https://github.com/manthanank/learn-mongodb/commit/3ce798c4047a5bdd56840123430ab4f9ea49194d))
+
+
+
 # [1.5.0](https://github.com/manthanank/learn-mongodb/compare/v1.4.0...v1.5.0) (2023-04-09)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * updated package file ([3da85ca](https://github.com/manthanank/learn-mongodb/commit/3da85cabd6f34f86bc1e796ed61193f06bb531b4))
-
-
-
-## [1.1.1](https://github.com/manthanank/learn-mongodb/compare/v1.1.0...v1.1.1) (2023-04-04)
-
-
-### Bug Fixes
-
-* Update releases.yml ([709beff](https://github.com/manthanank/learn-mongodb/commit/709beff09527c559d7e9b1bdd80ccb944482b495))
 
 
 
