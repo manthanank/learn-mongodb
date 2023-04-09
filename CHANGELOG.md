@@ -1,3 +1,12 @@
+# [1.3.0](https://github.com/manthanank/learn-mongodb/compare/v1.2.0...v1.3.0) (2023-04-09)
+
+
+### Features
+
+* updated readme file ([ae397dc](https://github.com/manthanank/learn-mongodb/commit/ae397dc678e4f5e7d92709e7a30337d39a27d1a2))
+
+
+
 # [1.2.0](https://github.com/manthanank/learn-mongodb/compare/v1.1.1...v1.2.0) (2023-04-09)
 
 
