@@ -22,8 +22,8 @@
   "homepage": "https://github.com/manthanank/learn-mongodb#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "mongoose": "^7.0.3"
+    "mongoose": "^7.3.1"
   }
 }
