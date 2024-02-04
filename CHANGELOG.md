@@ -1,3 +1,12 @@
+# [1.13.0](https://github.com/manthanank/learn-mongodb/compare/v1.12.0...v1.13.0) (2024-02-04)
+
+
+### Features
+
+* Create CONTRIBUTING.md ([3fc72ab](https://github.com/manthanank/learn-mongodb/commit/3fc72abc6c46c095146227d255fe8dd51963ddd5))
+
+
+
 # [1.12.0](https://github.com/manthanank/learn-mongodb/compare/v1.11.0...v1.12.0) (2024-02-04)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * updated mongoose ([b469525](https://github.com/manthanank/learn-mongodb/commit/b46952591e53bd5a197ce584f2989f1a2169b004))
-
-
-
-# [1.8.0](https://github.com/manthanank/learn-mongodb/compare/v1.7.0...v1.8.0) (2024-01-01)
-
-
-### Features
-
-* updated ([c5e7d85](https://github.com/manthanank/learn-mongodb/commit/c5e7d8577e389f8c5da8b3f40a1831787d97de0b))
 
 
 
