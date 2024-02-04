@@ -1,3 +1,12 @@
+# [1.12.0](https://github.com/manthanank/learn-mongodb/compare/v1.11.0...v1.12.0) (2024-02-04)
+
+
+### Features
+
+* Delete CONTRIBUTING.md ([06e919e](https://github.com/manthanank/learn-mongodb/commit/06e919e76f914c18e4b57f6fe967818dc52a0e86))
+
+
+
 # [1.11.0](https://github.com/manthanank/learn-mongodb/compare/v1.10.0...v1.11.0) (2024-02-04)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * updated ([c5e7d85](https://github.com/manthanank/learn-mongodb/commit/c5e7d8577e389f8c5da8b3f40a1831787d97de0b))
-
-
-
-# [1.7.0](https://github.com/manthanank/learn-mongodb/compare/v1.6.0...v1.7.0) (2023-06-26)
-
-
-### Features
-
-* updated version ([066993c](https://github.com/manthanank/learn-mongodb/commit/066993ca0330e04fb82a9d0e1a2d4763f3dc6da7))
 
 
 
