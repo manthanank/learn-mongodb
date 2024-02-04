@@ -12,13 +12,14 @@ const dbPassword = process.env.MONGODB_PASSWORD;
 
 mongoose
     .connect(
-        `mongodb+srv://${dbUser}:${dbPassword}@cluster0.re3ha3x.mongodb.net/learn-mongodb`
+        `mongodb+srv://${dbUser}:${dbPassword}@cluster0.re3ha3x.mongodb.net/learn-mongodb`,
+        { useNewUrlParser: true, useUnifiedTopology: true } // Add these options for MongoDB connection
     )
     .then(() => {
         console.log("Connected to MongoDB database!");
     })
-    .catch(() => {
-        console.log("Connection failed!");
+    .catch((error) => {
+        console.error("Connection failed!", error); // Log the error for better debugging
     });
 
 app.use(

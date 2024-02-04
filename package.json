@@ -1,11 +1,12 @@
 {
   "name": "learn-mongodb",
   "version": "1.8.0",
-  "description": "Complete MongoDB with all resources to learn.",
+  "description": "Complete MongoDB guide with resources for learning.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js --watch"
+    "dev": "nodemon index.js",
+    "start": "node --watch index.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "mongoose": "^7.6.7"
+    "mongoose": "^7.6.7",
+    "nodemon": "^3.0.3"
   }
 }
