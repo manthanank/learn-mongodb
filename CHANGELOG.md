@@ -1,3 +1,12 @@
+# [1.14.0](https://github.com/manthanank/learn-mongodb/compare/v1.13.0...v1.14.0) (2024-02-04)
+
+
+### Features
+
+* Create CODE_OF_CONDUCT.md ([0fd4758](https://github.com/manthanank/learn-mongodb/commit/0fd4758c93a5449a11a3789003d511ff04a07548))
+
+
+
 # [1.13.0](https://github.com/manthanank/learn-mongodb/compare/v1.12.0...v1.13.0) (2024-02-04)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * updated ([c5946be](https://github.com/manthanank/learn-mongodb/commit/c5946beecd9dbf086feafd678e0849c83c2f2186))
-
-
-
-# [1.9.0](https://github.com/manthanank/learn-mongodb/compare/v1.8.0...v1.9.0) (2024-01-01)
-
-
-### Features
-
-* updated mongoose ([b469525](https://github.com/manthanank/learn-mongodb/commit/b46952591e53bd5a197ce584f2989f1a2169b004))
 
 
 
