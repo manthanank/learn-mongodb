@@ -1,3 +1,12 @@
+# [1.11.0](https://github.com/manthanank/learn-mongodb/compare/v1.10.0...v1.11.0) (2024-02-04)
+
+
+### Features
+
+* updated ([5eeae74](https://github.com/manthanank/learn-mongodb/commit/5eeae7471912f6b566b7fdb9061dcdee008aaf92))
+
+
+
 # [1.10.0](https://github.com/manthanank/learn-mongodb/compare/v1.9.0...v1.10.0) (2024-02-04)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * updated version ([066993c](https://github.com/manthanank/learn-mongodb/commit/066993ca0330e04fb82a9d0e1a2d4763f3dc6da7))
-
-
-
-# [1.6.0](https://github.com/manthanank/learn-mongodb/compare/v1.5.1...v1.6.0) (2023-06-26)
-
-
-### Features
-
-* updated packages ([96ddfce](https://github.com/manthanank/learn-mongodb/commit/96ddfceed4c314b4e7fc415ad76283df6cdaad7a))
 
 
 

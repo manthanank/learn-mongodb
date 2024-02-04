@@ -1,6 +1,6 @@
 {
   "name": "learn-mongodb",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "Complete MongoDB guide with resources for learning.",
   "main": "index.js",
   "scripts": {
