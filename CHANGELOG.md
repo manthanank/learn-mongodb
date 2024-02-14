@@ -1,3 +1,12 @@
+# [1.15.0](https://github.com/manthanank/learn-mongodb/compare/v1.14.0...v1.15.0) (2024-02-14)
+
+
+### Features
+
+* Update Dockerfile ([b837985](https://github.com/manthanank/learn-mongodb/commit/b837985f86cc22126054d134392907a34fe7a0ff))
+
+
+
 # [1.14.0](https://github.com/manthanank/learn-mongodb/compare/v1.13.0...v1.14.0) (2024-02-04)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * updated ([5eeae74](https://github.com/manthanank/learn-mongodb/commit/5eeae7471912f6b566b7fdb9061dcdee008aaf92))
-
-
-
-# [1.10.0](https://github.com/manthanank/learn-mongodb/compare/v1.9.0...v1.10.0) (2024-02-04)
-
-
-### Features
-
-* updated ([c5946be](https://github.com/manthanank/learn-mongodb/commit/c5946beecd9dbf086feafd678e0849c83c2f2186))
 
 
 
