@@ -9,9 +9,52 @@ This repository provides a comprehensive guide to help you get started with Mong
 [![Npm Package monthly downloads](https://badgen.net/npm/dm/learn-mongodb)](https://npmjs.com/package/learn-mongodb)
 [![Npm Package yearly downloads](https://badgen.net/npm/dy/learn-mongodb)](https://npmjs.com/package/learn-mongodb)
 
+## Table of Contents
+
+- [Introduction to MongoDB](#introduction-to-mongodb)
+  - [Key Features of MongoDB](#key-features-of-mongodb)
+  - [Use Cases of MongoDB](#use-cases-of-mongodb)
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Basic Concepts](#basic-concepts)
+- [MongoDB Shell](#mongodb-shell)
+  - [Basic Commands](#basic-commands)
+- [Data Modeling](#data-modeling)
+  - [Embedded Data Model](#embedded-data-model)
+  - [Referenced Data Model](#referenced-data-model)
+- [Indexing](#indexing)
+  - [Creating an Index](#creating-an-index)
+  - [Compound Index](#compound-index)
+  - [Text Index](#text-index)
+- [Connecting to MongoDB](#connecting-to-mongodb)
+  - [Using the MongoDB Node.js Driver](#using-the-mongodb-nodejs-driver)
+  - [Using Mongoose](#using-mongoose)
+- [CRUD Operations](#crud-operations)
+- [Database Commands](#database-commands)
+- [Collection Commands](#collection-commands)
+- [Row(Document) Commands](#rowdocument-commands)
+- [Aggregation Framework](#aggregation-framework)
+- [Text Search](#text-search)
+- [Geospatial Queries](#geospatial-queries)
+- [Transactions](#transactions)
+- [Data Validation](#data-validation)
+- [Security](#security)
+- [Backup and Restore](#backup-and-restore)
+- [MongoDB Atlas](#mongodb-atlas)
+- [Interview Questions](#interview-questions)
+- [Contributing](#contributing)
+- [Acknowledgements](#acknowledgements)
+- [Conclusion](#conclusion)
+- [References](#references)
+- [License](#license)
+- [Connect with me](#connect-with-me)
+- [Support](#support)
+
 ## Introduction to MongoDB
 
 MongoDB is a document-oriented NoSQL database, designed to store, query, and process large amounts of unstructured or semi-structured data. It uses a flexible, JSON-like document format called BSON (Binary JSON) to represent data.
+
+[Back to Top⤴️](#table-of-contents)
 
 ### Key Features of MongoDB
 
@@ -25,6 +68,8 @@ MongoDB is a document-oriented NoSQL database, designed to store, query, and pro
 - **Real-time Analytics**: MongoDB can handle real-time data processing and analytics for applications that require quick insights.
 - **Internet of Things (IoT)**: MongoDB is used in IoT applications to store and process sensor data from connected devices.
 
+[Back to Top⤴️](#table-of-contents)
+
 ## Getting Started
 
 To start using MongoDB, you need to install the MongoDB server on your local machine or use a cloud-based MongoDB service like MongoDB Atlas.
@@ -33,6 +78,8 @@ To start using MongoDB, you need to install the MongoDB server on your local mac
 
 Follow the [official MongoDB installation guide](https://docs.mongodb.com/manual/installation/) to set up MongoDB on your system.
 
+[Back to Top⤴️](#table-of-contents)
+
 ## Basic Concepts
 
 - **Collections**: Equivalent to tables in relational databases, collections store documents.
@@ -40,9 +87,13 @@ Follow the [official MongoDB installation guide](https://docs.mongodb.com/manual
 - **Fields**: Key-value pairs within a document.
 - **Indexes**: Improve query performance by providing a quick access path to the data.
 
+[Back to Top⤴️](#table-of-contents)
+
 ## MongoDB Shell
 
 MongoDB provides a command-line interface called the MongoDB shell to interact with the database. You can perform CRUD operations, create indexes, and run queries using the shell.
+
+[Back to Top⤴️](#table-of-contents)
 
 ### Basic Commands
 
@@ -51,6 +102,8 @@ MongoDB provides a command-line interface called the MongoDB shell to interact w
 - **`show collections`**: List all collections in the current database.
 - **`db.collection.find()`**: Retrieve all documents from a collection.
 - **`db.collection.insertOne({ field: value })`**: Insert a document into a collection.
+
+[Back to Top⤴️](#table-of-contents)
 
 ## Data Modeling
 
@@ -81,6 +134,8 @@ MongoDB uses a flexible data model that allows you to represent complex hierarch
 }
 ```
 
+[Back to Top⤴️](#table-of-contents)
+
 ## Indexing
 
 Indexes in MongoDB improve query performance by allowing the database to quickly locate and retrieve data. You can create indexes on single fields, compound fields, or text fields.
@@ -102,6 +157,8 @@ db.users.createIndex({ name: 1, age: -1 });
 ```javascript
 db.articles.createIndex({ content: "text" });
 ```
+
+[Back to Top⤴️](#table-of-contents)
 
 ## Connecting to MongoDB
 
@@ -143,6 +200,8 @@ mongoose
     console.error("Connection failed!", error);
   });
 ```
+
+[Back to Top⤴️](#table-of-contents)
 
 ## CRUD Operations
 
@@ -205,93 +264,7 @@ db.users.deleteOne({ name: "Bob Smith" });
 db.users.deleteMany({ age: { $gte: 30 } });
 ```
 
-## Connect & Check version of MongoDB
-
-```bash
-mongo --nodb
-db.version()
-```
-
-## Create a Database
-
-```bash
-use mydatabase
-```
-
-## Create a Collection
-
-```bash
-db.createCollection('users')
-```
-
-## Insert a Document
-
-```bash
-db.users.insertOne({
-  name: "John Doe",
-  age: 25,
-  email: "
-})
-```
-
-## Query Documents
-
-```bash
-db.users.find()
-```
-
-## Update a Document
-
-```bash
-db.users.updateOne(
-  { name: "John Doe" },
-  { $set: { age: 26 } }
-)
-```
-
-## Delete a Document
-
-```bash
-db.users.deleteOne({ name: "Bob Smith" })
-```
-
-To interact with MongoDB, you can use the following commands in your terminal:
-
-```bash
-# Access the MongoDB shell
-mongo
-
-# Alternatively, you can use the MongoDB shell with improved features
-mongosh
-
-# Start the MongoDB server
-mongod
-```
-
-## Data Models
-
-MongoDB uses flexible, schema-less documents to store data. Documents in a collection can have different fields, and data doesn't need to be uniform.
-
-## Sample POST Request Body
-
-```json
-{
-    "firstName": "John",
-    "lastName": "Doe",
-    "email": "john.doe@example.com",
-    "age": 25,
-    "gender": "Male",
-    "dateOfBirth": "1997-01-15",
-    "address": {
-        "street": "123 Main St",
-        "city": "Cityville",
-        "state": "CA",
-        "zipCode": "12345"
-    },
-    "phoneNumber": "123-456-7890",
-    "isActive": true
-}
-```
+[Back to Top⤴️](#table-of-contents)
 
 ## Database Commands
 
@@ -319,7 +292,9 @@ Delete Database
 db.dropDatabase()
 ```
 
-### **Collection Commands**
+[Back to Top⤴️](#table-of-contents)
+
+## Collection Commands
 
 Show Collections
 
@@ -339,7 +314,9 @@ Drop a collection named 'comments’
 db.comments.drop()
 ```
 
-### **Row(Document) Commands**
+[Back to Top⤴️](#table-of-contents)
+
+## Row(Document) Commands
 
 Show all Rows in a Collection
 
@@ -420,7 +397,6 @@ Less than/Greater than/ Less than or Eq/Greater than or Eq
 
 ```bash
 db.comments.find({member_since: {$lt: 90}})
-
 ```
 
 ```bash
@@ -435,9 +411,9 @@ db.comments.find({member_since: {$gt: 90}})
 db.comments.find({member_since: {$gte: 90}})
 ```
 
-Here are a few suggestions and additions to enhance the guide:
+[Back to Top⤴️](#table-of-contents)
 
-### **Aggregation Framework:**
+## Aggregation Framework
 
 MongoDB's Aggregation Framework is a powerful tool for data transformation and analysis. You can include examples of aggregation pipeline stages like `$match`, `$group`, `$project`, and others.
 
@@ -449,7 +425,9 @@ db.collection.aggregate([
 ])
 ```
 
-### **Text Search:**
+[Back to Top⤴️](#table-of-contents)
+
+## Text Search
 
 MongoDB supports full-text search capabilities. You can demonstrate how to perform text searches on a text index.
 
@@ -458,7 +436,9 @@ db.collection.createIndex({ fieldName: "text" })
 db.collection.find({ $text: { $search: "searchQuery" } })
 ```
 
-### **Geospatial Queries:**
+[Back to Top⤴️](#table-of-contents)
+
+## Geospatial Queries
 
 MongoDB has built-in support for geospatial queries. You can showcase how to query documents based on their geographical location.
 
@@ -474,7 +454,9 @@ db.collection.find({
 })
 ```
 
-### **Transactions:**
+[Back to Top⤴️](#table-of-contents)
+
+## Transactions
 
 If you are using MongoDB version 4.0 or above, you can include examples of transactions for handling multiple operations atomically.
 
@@ -495,7 +477,9 @@ finally {
 }
 ```
 
-### **Data Validation:**
+[Back to Top⤴️](#table-of-contents)
+
+## Data Validation
 
 MongoDB 3.6 and later versions support JSON Schema validation. You can provide examples of how to enforce a schema on a collection.
 
@@ -514,7 +498,9 @@ db.createCollection("validatedCollection", {
 })
 ```
 
-### **Security:**
+[Back to Top⤴️](#table-of-contents)
+
+## Security
 
 Briefly touch upon MongoDB security practices, such as authentication, authorization, and connection security.
 
@@ -528,7 +514,9 @@ db.createUser({
 })
 ```
 
-### **Backup and Restore:**
+[Back to Top⤴️](#table-of-contents)
+
+## Backup and Restore
 
 Explain how to perform backups and restores using `mongodump` and `mongorestore` utilities.
 
@@ -540,29 +528,78 @@ mongodump --db databaseName --out /path/to/backup
 mongorestore --db databaseName /path/to/backup/databaseName
 ```
 
-### **MongoDB Atlas:**
+[Back to Top⤴️](#table-of-contents)
+
+## MongoDB Atlas
 
 Discover MongoDB Atlas, the cloud-based database service, and learn how to deploy, manage, and scale MongoDB clusters.
+
+[Back to Top⤴️](#table-of-contents)
+
+## Interview Questions
+
+1. **What is MongoDB? How is it different from SQL databases?**
+2. **What are the key features of MongoDB?**
+3. **Explain the concept of a document and collection in MongoDB.**
+4. **What is BSON in MongoDB?**
+5. **How do you insert, update, and delete documents in MongoDB?**
+6. **What is the difference between `find()` and `findOne()`?**
+7. **What are indexes in MongoDB? How do they improve performance?**
+8. **What is the purpose of the `_id` field in MongoDB?**
+9. **Explain the difference between `db.collection.drop()` and `db.collection.remove()`.**
+10. **How do you create and drop databases in MongoDB?**
+11. **What is sharding in MongoDB? Why is it important?**
+12. **Explain the aggregation framework in MongoDB.**
+13. **What are replica sets in MongoDB? How do they ensure high availability?**
+14. **How does MongoDB handle transactions?**
+15. **What is the difference between embedded and referenced documents?**
+16. **How do you optimize queries in MongoDB?**
+17. **What is a capped collection? When would you use it?**
+18. **Explain the `$lookup` operator in MongoDB. How does it work?**
+19. **How does MongoDB handle schema validation?**
+20. **What is a covered query in MongoDB?**
+21. **Describe MongoDB’s internal storage architecture.**
+22. **How do you manage large datasets in MongoDB for performance?**
+23. **What are the differences between MongoDB and other NoSQL databases like Cassandra or CouchDB?**
+24. **Explain the write concern and read concern levels in MongoDB.**
+25. **How does MongoDB ensure data consistency in distributed systems?**
+26. **What are MongoDB change streams, and how do they work?**
+27. **Describe the WiredTiger storage engine. How does it differ from MMAPv1?**
+28. **How would you secure a MongoDB deployment in production?**
+29. **What is the difference between `findAndModify()` and `update()`? When would you use one over the other?**
+30. **Explain how MongoDB handles concurrency.**
+
+[Back to Top⤴️](#table-of-contents)
 
 ## Contributing
 
 If you find any issues or have suggestions for improvement, feel free to contribute. Follow the [contribution guidelines](CONTRIBUTING.md) for details.
 
+[Back to Top⤴️](#table-of-contents)
+
 ## Acknowledgements
 
 - [MongoDB Documentation](https://docs.mongodb.com/)
+
+[Back to Top⤴️](#table-of-contents)
 
 ## Conclusion
 
 MongoDB is a powerful NoSQL database that offers flexibility, scalability, and performance for modern applications. By understanding the basic concepts, data modeling, indexing, and CRUD operations, you can leverage MongoDB effectively in your projects.
 
+[Back to Top⤴️](#table-of-contents)
+
 ## References
 
 - [MongoDB Documentation](https://docs.mongodb.com/)
 
+[Back to Top⤴️](#table-of-contents)
+
 ## License
 
 This repository is licensed under the [MIT License](LICENSE).
+
+[Back to Top⤴️](#table-of-contents)
 
 ## Connect with me
 
@@ -572,6 +609,8 @@ This repository is licensed under the [MIT License](LICENSE).
 - [Instagram](https://www.instagram.com/manthan_ank/)
 - [YouTube](https://www.youtube.com/@manthanank)
 - [GitHub](https://github.com/manthanank)
+
+[Back to Top⤴️](#table-of-contents)
 
 ## Support
 
