@@ -1,6 +1,6 @@
 {
   "name": "learn-mongodb",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "type": "module",
   "description": "Comprehensive enterprise curriculum, production guide, and interactive query/aggregation sandbox for MongoDB 8 and Mongoose 8.",
   "main": "dist/server.js",

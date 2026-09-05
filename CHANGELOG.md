@@ -1,3 +1,12 @@
+# [2.1.0](https://github.com/manthanank/learn-mongodb/compare/v1.15.0...v2.1.0) (2026-09-05)
+
+
+### Features
+
+* modernize curriculum, architecture, and CI/CD workflows ([debddc4](https://github.com/manthanank/learn-mongodb/commit/debddc408866dbc9db76410cc74c67a028d44168))
+
+
+
 # [1.15.0](https://github.com/manthanank/learn-mongodb/compare/v1.14.0...v1.15.0) (2024-02-14)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * Delete CONTRIBUTING.md ([06e919e](https://github.com/manthanank/learn-mongodb/commit/06e919e76f914c18e4b57f6fe967818dc52a0e86))
-
-
-
-# [1.11.0](https://github.com/manthanank/learn-mongodb/compare/v1.10.0...v1.11.0) (2024-02-04)
-
-
-### Features
-
-* updated ([5eeae74](https://github.com/manthanank/learn-mongodb/commit/5eeae7471912f6b566b7fdb9061dcdee008aaf92))
 
 
 
