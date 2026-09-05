@@ -1,19 +1,27 @@
 {
   "name": "learn-mongodb",
-  "version": "1.15.0",
-  "description": "Complete Guide to Learn MongoDB.",
-  "main": "index.js",
+  "version": "2.0.0",
+  "type": "module",
+  "description": "Comprehensive enterprise curriculum, production guide, and interactive query/aggregation sandbox for MongoDB 8 and Mongoose 8.",
+  "main": "dist/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js",
-    "start": "node --watch index.js"
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test": "vitest run"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/manthanank/learn-mongodb.git"
   },
   "keywords": [
-    "mongodb"
+    "mongodb",
+    "mongoose",
+    "nosql",
+    "database",
+    "aggregation-framework",
+    "typescript",
+    "express"
   ],
   "author": "Manthan Ankolekar",
   "license": "ISC",
@@ -24,10 +32,17 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "mongoose": "^7.8.6"
+    "express": "^5.0.1",
+    "mongoose": "^8.10.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.4",
+    "@types/supertest": "^6.0.2",
+    "supertest": "^7.0.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5"
   }
 }

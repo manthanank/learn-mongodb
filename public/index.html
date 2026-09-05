@@ -1,17 +1,451 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webpage</title>
-    <link rel="stylesheet" href="/public/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MongoDB & Mongoose Enterprise Sandbox & Curriculum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0f1d;
+      --bg-secondary: #111827;
+      --bg-card: rgba(17, 24, 39, 0.75);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --accent-green: #00ed64;
+      --accent-emerald: #00684a;
+      --accent-cyan: #00d2ff;
+      --accent-amber: #f59e0b;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --font-main: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      min-height: 100vh;
+      line-height: 1.6;
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(0, 237, 100, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 75%, rgba(0, 210, 255, 0.06) 0%, transparent 45%);
+    }
+
+    header {
+      padding: 2.5rem 2rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(10, 15, 29, 0.85);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, var(--accent-green), var(--accent-emerald));
+      color: #032b1d;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      letter-spacing: 0.05em;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #ffffff, var(--accent-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .status-pill {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      background: rgba(0, 237, 100, 0.1);
+      border: 1px solid rgba(0, 237, 100, 0.3);
+      color: var(--accent-green);
+      padding: 0.4rem 0.9rem;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-green);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 900px) {
+      main {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+
+    .card.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+      display: block;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      padding: 0.65rem 0.85rem;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--accent-green);
+    }
+
+    button {
+      background: linear-gradient(135deg, var(--accent-green), #00c250);
+      color: #032b1d;
+      font-family: var(--font-main);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.7rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+
+    button:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+    pre {
+      background: #060913;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: #7dd3fc;
+      overflow-x: auto;
+      max-height: 280px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .user-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    .user-table th, .user-table td {
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .user-table th {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      background: rgba(0, 237, 100, 0.15);
+      color: var(--accent-green);
+      margin-right: 0.25rem;
+    }
+  </style>
 </head>
-
 <body>
-    <h1>Welcome to the Page</h1>
-    <script src="/public/script.js"></script>
-</body>
 
+  <header>
+    <div class="header-container">
+      <div class="brand">
+        <span class="brand-badge">MONGODB 8</span>
+        <h1>Interactive Query & Aggregation Sandbox</h1>
+      </div>
+      <div class="status-pill">
+        <span class="dot"></span>
+        <span id="system-status">API Connected</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Card 1: Users Collection & Filtering -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Live Collection Query (Users)</span>
+        <button onclick="loadUsers()" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Refresh</button>
+      </div>
+      <div class="grid-2">
+        <div>
+          <label>Filter by Department</label>
+          <select id="dept-filter" onchange="loadUsers()">
+            <option value="">All Departments</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Data Platforms">Data Platforms</option>
+            <option value="DevOps">DevOps</option>
+          </select>
+        </div>
+        <div>
+          <label>Search Name / Email</label>
+          <input type="text" id="search-input" placeholder="Type name..." oninput="loadUsers()">
+        </div>
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Department</th>
+              <th>Salary</th>
+              <th>Tags</th>
+            </tr>
+          </thead>
+          <tbody id="user-rows">
+            <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Loading collection...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Card 2: ESR Index Rule Optimizer -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">ESR Index Rule Optimizer</span>
+        <button onclick="analyzeESR()">Analyze Query</button>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        Enter query filters and sort criteria to generate the optimal compound index under MongoDB's <strong>Equality, Sort, Range (ESR)</strong> rule.
+      </p>
+      <div>
+        <label>Filter Object (JSON)</label>
+        <textarea id="esr-filter" rows="3">{"department": "Engineering", "age": {"$gte": 25}}</textarea>
+      </div>
+      <div>
+        <label>Sort Object (JSON)</label>
+        <textarea id="esr-sort" rows="2">{"salary": -1}</textarea>
+      </div>
+      <div>
+        <label>Recommended Index & Execution Assessment</label>
+        <pre id="esr-output">Click 'Analyze Query' to evaluate index fitness.</pre>
+      </div>
+    </div>
+
+    <!-- Card 3: Aggregation Framework Pipeline Sandbox (Full Width) -->
+    <div class="card full-width">
+      <div class="card-header">
+        <span class="card-title">Aggregation Pipeline Sandbox</span>
+        <div style="display: flex; gap: 0.5rem;">
+          <select id="sample-picker" onchange="loadSamplePipeline()" style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+            <option value="0">Sample: Department Salary Analytics</option>
+            <option value="1">Sample: Tag Popularity</option>
+            <option value="2">Sample: Age Demographics</option>
+          </select>
+          <button onclick="executePipeline()">Execute Pipeline</button>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <label>Aggregation Stages (Pipeline Array)</label>
+          <textarea id="pipeline-input" rows="8" style="height: 220px;"></textarea>
+        </div>
+        <div>
+          <label>Pipeline Results</label>
+          <pre id="pipeline-output" style="height: 220px; max-height: 220px;">Execution results will appear here...</pre>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let samplePipelines = [];
+
+    async function checkHealth() {
+      try {
+        const res = await fetch('/api/health');
+        const data = await res.json();
+        document.getElementById('system-status').innerText = `${data.service} (v${data.version}) [${data.mode}]`;
+      } catch {
+        document.getElementById('system-status').innerText = 'Offline / Standalone';
+      }
+    }
+
+    async function loadUsers() {
+      const dept = document.getElementById('dept-filter').value;
+      const search = document.getElementById('search-input').value;
+      const params = new URLSearchParams();
+      if (dept) params.append('department', dept);
+      if (search) params.append('search', search);
+
+      try {
+        const res = await fetch(`/api/users?${params.toString()}`);
+        const result = await res.json();
+        const tbody = document.getElementById('user-rows');
+        tbody.innerHTML = '';
+        if (!result.data || result.data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No matching documents</td></tr>';
+          return;
+        }
+        result.data.forEach(u => {
+          const tr = document.createElement('tr');
+          const tags = (u.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+          tr.innerHTML = `
+            <td><strong>${u.firstName} ${u.lastName}</strong><br><small style="color:var(--text-muted);">${u.email}</small></td>
+            <td>${u.department || 'N/A'}</td>
+            <td>$${(u.salary || 0).toLocaleString()}</td>
+            <td>${tags || '-'}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function loadSamplePipelines() {
+      try {
+        const res = await fetch('/api/sample-pipelines');
+        const data = await res.json();
+        samplePipelines = data.samples || [];
+        loadSamplePipeline();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function loadSamplePipeline() {
+      const idx = document.getElementById('sample-picker').value;
+      if (samplePipelines[idx]) {
+        document.getElementById('pipeline-input').value = JSON.stringify(samplePipelines[idx].pipeline, null, 2);
+      }
+    }
+
+    async function executePipeline() {
+      const input = document.getElementById('pipeline-input').value;
+      const out = document.getElementById('pipeline-output');
+      try {
+        const pipeline = JSON.parse(input);
+        out.innerText = 'Executing pipeline...';
+        const res = await fetch('/api/aggregate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pipeline })
+        });
+        const data = await res.json();
+        out.innerText = JSON.stringify(data, null, 2);
+      } catch (err) {
+        out.innerText = 'Error: ' + err.message;
+      }
+    }
+
+    async function analyzeESR() {
+      const filterRaw = document.getElementById('esr-filter').value;
+      const sortRaw = document.getElementById('esr-sort').value;
+      const out = document.getElementById('esr-output');
+
+      try {
+        const filter = JSON.parse(filterRaw);
+        const sort = JSON.parse(sortRaw);
+        const res = await fetch('/api/index-analyzer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filter, sort })
+        });
+        const data = await res.json();
+        out.innerText = JSON.stringify(data.analysis, null, 2);
+      } catch (err) {
+        out.innerText = 'JSON Parse Error: ' + err.message;
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      checkHealth();
+      loadUsers();
+      loadSamplePipelines();
+      analyzeESR();
+    });
+  </script>
+</body>
 </html>

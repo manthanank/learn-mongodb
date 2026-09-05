@@ -1,687 +1,1079 @@
-# Learn MongoDB
+# Complete Guide to MongoDB 8 & Mongoose 8 Enterprise Architecture
 
-This repository provides a comprehensive guide to help you get started with MongoDB, a popular NoSQL database. MongoDB is known for its flexibility, scalability, and ease of use, making it a preferred choice for many developers and organizations.
-
-[![NPM Package](https://github.com/manthanank/learn-mongodb/actions/workflows/publish.yml/badge.svg)](https://github.com/manthanank/learn-mongodb/actions/workflows/publish.yml)
+[![Build and Publish Docker Image to DockerHub](https://github.com/manthanank/learn-mongodb/actions/workflows/docker.yml/badge.svg)](https://github.com/manthanank/learn-mongodb/actions/workflows/docker.yml)
 [![Releases](https://github.com/manthanank/learn-mongodb/actions/workflows/releases.yml/badge.svg)](https://github.com/manthanank/learn-mongodb/actions/workflows/releases.yml)
-[![Npm Package total downloads](https://badgen.net/npm/dt/learn-mongodb)](https://npmjs.com/package/learn-mongodb)
-[![Npm Package weekly downloads](https://badgen.net/npm/dw/learn-mongodb)](https://npmjs.com/package/learn-mongodb)
-[![Npm Package monthly downloads](https://badgen.net/npm/dm/learn-mongodb)](https://npmjs.com/package/learn-mongodb)
-[![Npm Package yearly downloads](https://badgen.net/npm/dy/learn-mongodb)](https://npmjs.com/package/learn-mongodb)
-
-## Table of Contents
-
-- [Introduction to MongoDB](#introduction-to-mongodb)
-  - [Key Features of MongoDB](#key-features-of-mongodb)
-  - [Use Cases of MongoDB](#use-cases-of-mongodb)
-- [Getting Started](#getting-started)
-- [Installation](#installation)
-- [Basic Concepts](#basic-concepts)
-- [MongoDB Shell](#mongodb-shell)
-  - [Basic Commands](#basic-commands)
-- [Data Modeling](#data-modeling)
-  - [Embedded Data Model](#embedded-data-model)
-  - [Referenced Data Model](#referenced-data-model)
-- [Indexing](#indexing)
-  - [Creating an Index](#creating-an-index)
-  - [Compound Index](#compound-index)
-  - [Text Index](#text-index)
-- [Connecting to MongoDB](#connecting-to-mongodb)
-  - [Using the MongoDB Node.js Driver](#using-the-mongodb-nodejs-driver)
-  - [Using Mongoose](#using-mongoose)
-- [CRUD Operations](#crud-operations)
-- [Database Commands](#database-commands)
-- [Collection Commands](#collection-commands)
-- [Row(Document) Commands](#rowdocument-commands)
-- [Aggregation Framework](#aggregation-framework)
-- [Text Search](#text-search)
-- [Geospatial Queries](#geospatial-queries)
-- [Transactions](#transactions)
-- [Data Validation](#data-validation)
-- [Security](#security)
-- [Backup and Restore](#backup-and-restore)
-- [MongoDB Atlas](#mongodb-atlas)
-- [Interview Questions](#interview-questions)
-- [Contributing](#contributing)
-- [Acknowledgements](#acknowledgements)
-- [Conclusion](#conclusion)
-- [References](#references)
-- [License](#license)
-- [Connect with me](#connect-with-me)
-- [Support](#support)
-
-## Introduction to MongoDB
-
-MongoDB is a document-oriented NoSQL database, designed to store, query, and process large amounts of unstructured or semi-structured data. It uses a flexible, JSON-like document format called BSON (Binary JSON) to represent data.
-
-[Back to Top⤴️](#table-of-contents)
-
-### Key Features of MongoDB
-
-- **Schema-less**: MongoDB does not require a predefined schema, allowing you to store data in a flexible manner.
-- **High Performance**: MongoDB provides high-speed read and write operations due to its efficient indexing and storage mechanisms.
-- **Scalability**: MongoDB supports horizontal scaling through sharding, enabling you to distribute data across multiple servers.
-
-### Use Cases of MongoDB
-
-- **Content Management**: MongoDB is suitable for managing content-heavy applications like blogs, news sites, and e-commerce platforms.
-- **Real-time Analytics**: MongoDB can handle real-time data processing and analytics for applications that require quick insights.
-- **Internet of Things (IoT)**: MongoDB is used in IoT applications to store and process sensor data from connected devices.
-
-[Back to Top⤴️](#table-of-contents)
-
-## Getting Started
-
-To start using MongoDB, you need to install the MongoDB server on your local machine or use a cloud-based MongoDB service like MongoDB Atlas.
-
-## Installation
-
-Follow the [official MongoDB installation guide](https://docs.mongodb.com/manual/installation/) to set up MongoDB on your system.
-
-[Back to Top⤴️](#table-of-contents)
-
-## Basic Concepts
-
-- **Collections**: Equivalent to tables in relational databases, collections store documents.
-- **Documents**: BSON data format records that store data in key-value pairs.
-- **Fields**: Key-value pairs within a document.
-- **Indexes**: Improve query performance by providing a quick access path to the data.
-
-[Back to Top⤴️](#table-of-contents)
-
-## MongoDB Shell
-
-MongoDB provides a command-line interface called the MongoDB shell to interact with the database. You can perform CRUD operations, create indexes, and run queries using the shell.
-
-[Back to Top⤴️](#table-of-contents)
-
-### Basic Commands
-
-- **`show dbs`**: List all databases.
-- **`use dbName`**: Switch to a specific database.
-- **`show collections`**: List all collections in the current database.
-- **`db.collection.find()`**: Retrieve all documents from a collection.
-- **`db.collection.insertOne({ field: value })`**: Insert a document into a collection.
-
-[Back to Top⤴️](#table-of-contents)
-
-## Data Modeling
-
-MongoDB uses a flexible data model that allows you to represent complex hierarchical relationships easily. You can embed documents within documents or reference other documents using references.
-
-### Embedded Data Model
-
-```json
-{
-  "name": "John Doe",
-  "age": 30,
-  "address": {
-    "street": "123 Main St",
-    "city": "Cityville",
-    "state": "CA",
-    "zipCode": "12345"
-  }
-}
-```
-
-### Referenced Data Model
-
-```json
-{
-  "name": "John Doe",
-  "age": 30,
-  "addressId": ObjectId("60a7b7b7e4b0c5f7c7b1e3a1")
-}
-```
-
-[Back to Top⤴️](#table-of-contents)
-
-## Indexing
-
-Indexes in MongoDB improve query performance by allowing the database to quickly locate and retrieve data. You can create indexes on single fields, compound fields, or text fields.
-
-### Creating an Index
-
-```javascript
-db.users.createIndex({ name: 1 });
-```
-
-### Compound Index
-
-```javascript
-db.users.createIndex({ name: 1, age: -1 });
-```
-
-### Text Index
-
-```javascript
-db.articles.createIndex({ content: "text" });
-```
-
-[Back to Top⤴️](#table-of-contents)
-
-## Connecting to MongoDB
-
-To connect to MongoDB from your application, you can use the MongoDB Node.js driver or an Object Data Modeling (ODM) library like Mongoose.
-
-### Using the MongoDB Node.js Driver
-
-```javascript
-const { MongoClient } = require("mongodb");
-
-const uri = "mongodb://localhost:27017";
-const client = new MongoClient(uri);
-
-async function connectToMongoDB() {
-  try {
-    await client.connect();
-    console.log("Connected to MongoDB!");
-  } catch (error) {
-    console.error("Connection failed!", error);
-  }
-}
-
-connectToMongoDB();
-```
-
-### Using Mongoose
-
-```javascript
-const mongoose = require("mongoose");
-
-const uri = "mongodb://localhost:27017/mydatabase";
-
-mongoose
-  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
-    console.log("Connected to MongoDB database!");
-  })
-  .catch((error) => {
-    console.error("Connection failed!", error);
-  });
-```
-
-[Back to Top⤴️](#table-of-contents)
-
-## CRUD Operations
-
-### Insert documents into a collection
-
-```javascript
-// Insert a single document
-db.users.insertOne({
-  name: "John Doe",
-  age: 25,
-  email: "john@example.com"
-});
-
-// Insert multiple documents
-db.users.insertMany([
-  { name: "Jane Doe", age: 30, email: "jane@example.com" },
-  { name: "Bob Smith", age: 22, email: "bob@example.com" }
-]);
-```
-
-### Query documents from a collection
-
-```javascript
-// Find all documents in the users collection
-db.users.find();
-
-// Find a document by a specific field value
-db.users.findOne({ name: "John Doe" });
-```
-
-### Update documents in a collection
-
-```javascript
-// Update a single document
-db.users.updateOne(
-  { name: "John Doe" },
-  { $set: { age: 26 } }
-);
-
-// Update multiple documents
-db.users.updateMany(
-  { age: { $lt: 30 } },
-  { $inc: { age: 1 } }
-);
-
-// Replace a single document
-db.users.replaceOne(
-  { name: "John Doe" },
-  { name: "John Doe", age: 26, updated_at: new Date() }
-);
-```
-
-### Delete documents from a collection
-
-```javascript
-// Delete a single document
-db.users.deleteOne({ name: "Bob Smith" });
-
-// Delete multiple documents
-db.users.deleteMany({ age: { $gte: 30 } });
-```
-
-[Back to Top⤴️](#table-of-contents)
-
-## Database Commands
-
-View all databases
-
-```bash
-show dbs
-```
-
-Create a new or switch databases
-
-```bash
-use dbName
-```
-
-View current Database
-
-```bash
-db
-```
-
-Delete Database
-
-```bash
-db.dropDatabase()
-```
-
-[Back to Top⤴️](#table-of-contents)
-
-## Collection Commands
-
-Show Collections
-
-```bash
-show collections
-```
-
-Create a collection named 'comments’
-
-```bash
-db.createCollection('data')
-```
-
-Drop a collection named 'comments’
-
-```bash
-db.comments.drop()
-```
-
-[Back to Top⤴️](#table-of-contents)
-
-## Row(Document) Commands
-
-Show all Rows in a Collection
-
-```bash
-db.comments.find()
-```
-
-Show all Rows in a Collection (Prettified)
-
-```bash
-db.comments.find().pretty()
-```
-
-Find the first row matching the object
-
-```bash
-db.comments.findOne({name: 'Manthan'})
-```
-
-Insert One Row
-
-```bash
-db.comments.insert({
-    'firstName': 'Manthan',
-    'lastName': 'Ank'
- })
-```
-
-Insert many Rows
-
-```bash
-db.comments.insertMany([{'firstName': 'Manthan', 'lastName': 'Ank'},{'firstName': 'Gagan','lastName': 'BA'}])
-```
-
-Search in a MongoDB Database
-
-```bash
-db.comments.find({lang:'JavaScript'})
-```
-
-Limit the number of rows in output
-
-```bash
-db.comments.find().limit(3)
-```
-
-Count the number of rows in the output
-
-```bash
-db.comments.find().count()
-```
-
-Update a row
-
-```bash
-db.comments.updateOne({name: 'Manthan'},{$set: {'name': 'Manthan','lang': 'JavaScript','mem_since': 1}},{upsert: true})
-```
-
-MongoDB Increment Operator
-
-```bash
-db.comments.update({name: 'Manthan'},{$inc:{mem_since: 2}})
-```
-
-MongoDB Rename Operator
-
-```bash
-db.comments.update({name: 'Manthan'},{$rename:{mem_since: 'member'}})
-```
-
-Delete Row
-
-```bash
-db.comments.remove({name: 'Manthan'})
-```
-
-Less than/Greater than/ Less than or Eq/Greater than or Eq
-
-```bash
-db.comments.find({member_since: {$lt: 90}})
-```
-
-```bash
-db.comments.find({member_since: {$lte: 90}})
-```
-
-```bash
-db.comments.find({member_since: {$gt: 90}})
-```
-
-```bash
-db.comments.find({member_since: {$gte: 90}})
-```
-
-[Back to Top⤴️](#table-of-contents)
-
-## Aggregation Framework
-
-MongoDB's Aggregation Framework is a powerful tool for data transformation and analysis. You can include examples of aggregation pipeline stages like `$match`, `$group`, `$project`, and others.
-
-```bash
-db.collection.aggregate([
-   { $match: { field: value } },
-   { $group: { _id: "$field", count: { $sum: 1 } } },
-   { $project: { _id: 0, field: "$_id", count: 1 } }
-])
-```
-
-[Back to Top⤴️](#table-of-contents)
-
-## Text Search
-
-MongoDB supports full-text search capabilities. You can demonstrate how to perform text searches on a text index.
-
-```bash
-db.collection.createIndex({ fieldName: "text" })
-db.collection.find({ $text: { $search: "searchQuery" } })
-```
-
-[Back to Top⤴️](#table-of-contents)
-
-## Geospatial Queries
-
-MongoDB has built-in support for geospatial queries. You can showcase how to query documents based on their geographical location.
-
-```bash
-db.collection.createIndex({ locationField: "2dsphere" })
-db.collection.find({
-   locationField: {
-      $near: {
-         $geometry: { type: "Point", coordinates: [longitude, latitude] },
-         $maxDistance: 1000  // in meters
-      }
-   }
-})
-```
-
-[Back to Top⤴️](#table-of-contents)
-
-## Transactions
-
-If you are using MongoDB version 4.0 or above, you can include examples of transactions for handling multiple operations atomically.
-
-```bash
-session = db.getMongo().startSession()
-session.startTransaction()
-try {
-   // Perform multiple operations
-   db.collection1.updateOne({ field: value1 }, { $set: { updateField1: newValue1 } })
-   db.collection2.updateOne({ field: value2 }, { $set: { updateField2: newValue2 } })
-   session.commitTransaction()
-} catch (error) {
-   print("Transaction failed. Aborting...")
-   session.abortTransaction()
-}
-finally {
-   session.endSession()
-}
-```
-
-[Back to Top⤴️](#table-of-contents)
-
-## Data Validation
-
-MongoDB 3.6 and later versions support JSON Schema validation. You can provide examples of how to enforce a schema on a collection.
-
-```bash
-db.createCollection("validatedCollection", {
-   validator: {
-      $jsonSchema: {
-         bsonType: "object",
-         required: ["field1", "field2"],
-         properties: {
-            field1: { bsonType: "string" },
-            field2: { bsonType: "int" }
-         }
-      }
-   }
-})
-```
-
-[Back to Top⤴️](#table-of-contents)
-
-## Security
-
-Briefly touch upon MongoDB security practices, such as authentication, authorization, and connection security.
-
-```bash
-# Creating a user with readWrite privileges
-use admin
-db.createUser({
-   user: "username",
-   pwd: "password",
-   roles: [{ role: "readWrite", db: "databaseName" }]
-})
-```
-
-[Back to Top⤴️](#table-of-contents)
-
-## Backup and Restore
-
-Explain how to perform backups and restores using `mongodump` and `mongorestore` utilities.
-
-```bash
-# Backup a database
-mongodump --db databaseName --out /path/to/backup
-
-# Restore a database
-mongorestore --db databaseName /path/to/backup/databaseName
-```
-
-[Back to Top⤴️](#table-of-contents)
-
-## MongoDB Atlas
-
-Discover MongoDB Atlas, the cloud-based database service, and learn how to deploy, manage, and scale MongoDB clusters.
-
-[Back to Top⤴️](#table-of-contents)
-
-## Interview Questions
-
-1. **What is MongoDB? How is it different from SQL databases?**
-   - MongoDB is a NoSQL database that stores data in flexible, JSON-like documents. Unlike SQL databases, it does not require a predefined schema and supports horizontal scaling.
-
-2. **What are the key features of MongoDB?**
-   - Schema-less, high performance, scalability, flexible data model, rich query language, and support for replication and sharding.
-
-3. **Explain the concept of a document and collection in MongoDB.**
-   - A document is a record in MongoDB, stored in BSON format. A collection is a group of documents, similar to a table in SQL databases.
-
-4. **What is BSON in MongoDB?**
-   - BSON (Binary JSON) is a binary representation of JSON-like documents, used internally by MongoDB for data storage and transfer.
-
-5. **How do you insert, update, and delete documents in MongoDB?**
-   - Insert: `db.collection.insertOne({ ... })`
-   - Update: `db.collection.updateOne({ ... }, { $set: { ... } })`
-   - Delete: `db.collection.deleteOne({ ... })`
-
-6. **What is the difference between `find()` and `findOne()`?**
-   - `find()` retrieves all documents matching the query, while `findOne()` retrieves only the first matching document.
-
-7. **What are indexes in MongoDB? How do they improve performance?**
-   - Indexes are special data structures that store a small portion of the collection's data set in an easy-to-traverse form. They improve query performance by allowing the database to quickly locate and retrieve data.
-
-8. **What is the purpose of the `_id` field in MongoDB?**
-   - The `_id` field is a unique identifier for each document in a collection. It ensures that each document can be uniquely identified and retrieved.
-
-9. **Explain the difference between `db.collection.drop()` and `db.collection.remove()`.**
-   - `db.collection.drop()` deletes the entire collection, including all documents and indexes. `db.collection.remove()` deletes documents matching the query but keeps the collection and indexes.
-
-10. **How do you create and drop databases in MongoDB?**
-    - Create: `use dbName`
-    - Drop: `db.dropDatabase()`
-
-11. **What is sharding in MongoDB? Why is it important?**
-    - Sharding is the process of distributing data across multiple servers to support horizontal scaling. It is important for handling large datasets and high-throughput applications.
-
-12. **Explain the aggregation framework in MongoDB.**
-    - The aggregation framework is a powerful tool for data transformation and analysis. It uses a pipeline of stages, such as `$match`, `$group`, and `$project`, to process and aggregate data.
-
-13. **What are replica sets in MongoDB? How do they ensure high availability?**
-    - Replica sets are groups of MongoDB servers that maintain the same data set. They ensure high availability by automatically failing over to a secondary server if the primary server goes down.
-
-14. **How does MongoDB handle transactions?**
-    - MongoDB supports multi-document transactions, allowing multiple operations to be executed atomically. Transactions are started with `session.startTransaction()` and committed with `session.commitTransaction()`.
-
-15. **What is the difference between embedded and referenced documents?**
-    - Embedded documents store related data within a single document, while referenced documents store related data in separate documents and reference them using ObjectIds.
-
-16. **How do you optimize queries in MongoDB?**
-    - Use indexes, avoid large documents, use projection to return only necessary fields, and analyze query performance with the `explain()` method.
-
-17. **What is a capped collection? When would you use it?**
-    - A capped collection is a fixed-size collection that automatically overwrites the oldest documents when it reaches its size limit. It is useful for logging and caching scenarios.
-
-18. **Explain the `$lookup` operator in MongoDB. How does it work?**
-    - The `$lookup` operator performs a left outer join to another collection in the same database. It allows you to combine data from multiple collections in a single query.
-
-19. **How does MongoDB handle schema validation?**
-    - MongoDB supports JSON Schema validation, allowing you to enforce a schema on a collection using the `validator` option in `db.createCollection()`.
-
-20. **What is a covered query in MongoDB?**
-    - A covered query is a query where all the fields in the query and the returned results are part of an index. It improves performance by avoiding the need to read documents from disk.
-
-21. **Describe MongoDB’s internal storage architecture.**
-    - MongoDB uses a storage engine (e.g., WiredTiger) to manage data storage. Data is stored in collections, which are composed of documents. Indexes are used to improve query performance.
-
-22. **How do you manage large datasets in MongoDB for performance?**
-    - Use sharding, optimize indexes, use appropriate data models, and perform regular maintenance tasks like compacting and reindexing.
-
-23. **What are the differences between MongoDB and other NoSQL databases like Cassandra or CouchDB?**
-    - MongoDB uses a document-oriented model, while Cassandra uses a wide-column model and CouchDB uses a document model with a focus on replication and synchronization. MongoDB supports rich queries and indexing, while Cassandra excels in write-heavy workloads and CouchDB focuses on offline-first applications.
-
-24. **Explain the write concern and read concern levels in MongoDB.**
-    - Write concern specifies the level of acknowledgment requested from MongoDB for write operations. Read concern specifies the consistency and isolation properties of the data read from the database.
-
-25. **How does MongoDB ensure data consistency in distributed systems?**
-    - MongoDB uses replica sets to ensure data consistency. Write operations are replicated to secondary members, and read operations can be configured to read from the primary or secondary members.
-
-26. **What are MongoDB change streams, and how do they work?**
-    - Change streams allow applications to access real-time data changes in a collection. They use the `watch()` method to listen for changes and provide a stream of change events.
-
-27. **Describe the WiredTiger storage engine. How does it differ from MMAPv1?**
-    - WiredTiger is the default storage engine in MongoDB, offering better compression, concurrency, and performance compared to the older MMAPv1 storage engine. WiredTiger uses a B-tree and LSM tree structure, while MMAPv1 uses memory-mapped files.
-
-28. **How would you secure a MongoDB deployment in production?**
-    - Enable authentication, use role-based access control, encrypt data at rest and in transit, configure firewalls, and regularly update MongoDB to the latest version.
-
-29. **What is the difference between `findAndModify()` and `update()`? When would you use one over the other?**
-    - `findAndModify()` atomically modifies and returns a single document, while `update()` modifies documents without returning them. Use `findAndModify()` when you need the modified document, and `update()` for bulk updates.
-
-30. **Explain how MongoDB handles concurrency.**
-    - MongoDB uses a combination of optimistic and pessimistic concurrency control. It employs document-level locking and supports multi-document transactions to ensure data consistency and isolation.
-
-[Back to Top⤴️](#table-of-contents)
-
-## Contributing
-
-If you find any issues or have suggestions for improvement, feel free to contribute. Follow the [contribution guidelines](CONTRIBUTING.md) for details.
-
-[Back to Top⤴️](#table-of-contents)
-
-## Acknowledgements
-
-- [MongoDB Documentation](https://docs.mongodb.com/)
-
-[Back to Top⤴️](#table-of-contents)
-
-## Conclusion
-
-MongoDB is a powerful NoSQL database that offers flexibility, scalability, and performance for modern applications. By understanding the basic concepts, data modeling, indexing, and CRUD operations, you can leverage MongoDB effectively in your projects.
-
-[Back to Top⤴️](#table-of-contents)
-
-## References
-
-- [MongoDB Documentation](https://docs.mongodb.com/)
-
-[Back to Top⤴️](#table-of-contents)
-
-## License
-
-This repository is licensed under the [MIT License](LICENSE).
-
-[Back to Top⤴️](#table-of-contents)
-
-## Connect with me
-
-- [Twitter](https://twitter.com/manthan_ank)
-- [LinkedIn](https://www.linkedin.com/in/manthanank)
-- [Facebook](https://www.facebook.com/manthanank/)
-- [Instagram](https://www.instagram.com/manthan_ank/)
-- [YouTube](https://www.youtube.com/@manthanank)
-- [GitHub](https://github.com/manthanank)
-
-[Back to Top⤴️](#table-of-contents)
-
-## Support
-
-If you like this learning repository and find it useful, consider buying me a coffee or sponsoring me through the GitHub Sponsor. Your support will help me to continue and bring more exciting projects. Thank you!
-
-[![Buy Me A Coffee](/assets/bmc-button.svg)](https://www.buymeacoffee.com/manthanank)
-
-[![Sponsor Me](https://img.shields.io/badge/Sponsor-GitHub-green)]([https://](https://github.com/sponsors/manthanank))
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg?logo=typescript)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-20.x-green.svg?logo=node.js)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express-5.0-black.svg?logo=express)](https://expressjs.com/)
+[![Mongoose](https://img.shields.io/badge/Mongoose-8.10-red.svg?logo=mongoose)](https://mongoosejs.com/)
+[![Vitest](https://img.shields.io/badge/Tested%20with-Vitest-yellow.svg?logo=vitest)](https://vitest.dev/)
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
+
+Welcome to the definitive, production-grade guide and interactive query/aggregation sandbox for **MongoDB 8** and **Mongoose 8**. Designed for senior software engineers, distributed systems architects, and full-stack developers, this repository covers everything from storage engine internals and WiredTiger memory mechanics to the Aggregation Framework, the ESR indexing rule, multi-document ACID transactions, replication, and sharding.
 
 ---
 
-Show your support by 🌟 the repository.
+## 📑 Table of Contents
+1. [Executive Overview & Core Architecture](#1-executive-overview--core-architecture)
+2. [WiredTiger Storage Engine Deep Dive](#2-wiredtiger-storage-engine-deep-dive)
+3. [Installation, Setup & Quickstart](#3-installation-setup--quickstart)
+4. [CRUD Operations & Query Operators](#4-crud-operations--query-operators)
+5. [Aggregation Framework Masterclass](#5-aggregation-framework-masterclass)
+6. [Indexing Architecture & The ESR Performance Rule](#6-indexing-architecture--the-esr-performance-rule)
+7. [Data Modeling & Enterprise Schema Design Patterns](#7-data-modeling--enterprise-schema-design-patterns)
+8. [Transactions, ACID & Distributed Consistency](#8-transactions-acid--distributed-consistency)
+9. [Replication, High Availability & Sharded Clusters](#9-replication-high-availability--sharded-clusters)
+10. [Mongoose 8+ ODM Integration](#10-mongoose-8-odm-integration)
+11. [Production Hardening, Security & Operations](#11-production-hardening-security--operations)
+12. [40 Senior MongoDB Interview Questions & In-Depth Answers](#12-40-senior-mongodb-interview-questions--in-depth-answers)
+13. [Comprehensive MongoDB Query & Aggregation Cheat Sheet](#13-comprehensive-mongodb-query--aggregation-cheat-sheet)
+14. [Contributing, Governance & Support](#14-contributing-governance--support)
+
+---
+
+## 1. Executive Overview & Core Architecture
+
+MongoDB is a document-oriented, distributed NoSQL database designed for horizontal scalability, high availability, and developer agility. Documents are stored in **BSON** (Binary JSON) format, allowing rich embedded hierarchical data structures, flexible schemas, and zero-impedance object-relational mapping.
+
+```
++-----------------------------------------------------------------------+
+|                           CLIENT LAYER                                |
+|         Node.js / Express / Mongoose Driver Connection Pool           |
++-----------------------------------------------------------------------+
+                                   |  (BSON Protocol over TLS)
+                                   v
++-----------------------------------------------------------------------+
+|                    MONGODB CORE DATABASE ENGINE                       |
+|  +-----------------------+  +-------------------+  +---------------+  |
+|  | Query Parser & Opt    |  | Aggregation Pipe  |  | Auth & RBAC   |  |
+|  +-----------------------+  +-------------------+  +---------------+  |
++-----------------------------------------------------------------------+
+                                   |
+                                   v
++-----------------------------------------------------------------------+
+|                     WIREDTIGER STORAGE ENGINE                         |
+|  +---------------------------+       +-----------------------------+  |
+|  |   In-Memory Cache (RAM)   | <---> |   Eviction Server Threads   |  |
+|  |  (Dirty & Clean Pages)    |       |   (LRU / Hazard Pointers)   |  |
+|  +---------------------------+       +-----------------------------+  |
+|                |                                    |                 |
+|                v (Checkpoints every 60s)            v (WAL Journal)   |
+|  +---------------------------+       +-----------------------------+  |
+|  | Data Files (B-Tree Blocks)|       | Disk Journal (Write-Ahead)  |  |
+|  +---------------------------+       +-----------------------------+  |
++-----------------------------------------------------------------------+
+```
+
+### BSON vs. JSON: Fundamental Distinctions
+While JSON is human-readable text, MongoDB uses **BSON** internally and on the wire:
+- **Binary Format**: Lightweight, traversable, and fast to encode/decode into native language data types.
+- **Extended Types**: Adds native support for `Date`, `ObjectId` (12-byte globally unique timestamp-based identifiers), `Binary Data` (UUIDs, images), `Decimal128` (arbitrary-precision floating point for financial calculations), `64-bit Integers (Long)`, and `Regex`.
+- **Length Prefixing**: Elements are prefixed with their byte length, allowing the query engine to skip sub-documents without parsing the entire payload.
+
+---
+
+## 2. WiredTiger Storage Engine Deep Dive
+
+WiredTiger has been the default storage engine since MongoDB 3.2. Understanding its memory management and persistence pipeline is essential for diagnosing latency spikes and memory starvation.
+
+### Memory Allocation & WiredTiger Cache
+By default, MongoDB allocates the WiredTiger cache size using:
+$$\text{Cache Size} = 50\% \times (\text{RAM} - 1\text{GB}) \quad (\text{minimum } 256\text{MB})$$
+
+The remaining host memory is dedicated to OS page cache, query execution sorting memory (`allowDiskUse`), and connection overhead (approx. 1MB per open socket).
+
+### Checkpoints and Journaling (Write-Ahead Logging)
+- **Checkpoints**: Every 60 seconds (or when 2GB of dirty data accumulates), WiredTiger flushes all modified pages from the in-memory cache to immutable disk blocks, creating a consistent snapshot on disk.
+- **Journal (WAL)**: Between 60-second checkpoints, durability is guaranteed by the **Journal**. Mutations are written sequentially to journal files on disk every 100ms (or immediately when a write specifies `j: true`). If a crash occurs, MongoDB replays journal entries recorded since the last checkpoint to recover uncommitted transactions.
+- **Eviction Triggers**: Background eviction threads monitor dirty and clean memory thresholds:
+  - When cache utilization crosses 80%, background eviction begins.
+  - When dirty cache crosses 20%, background threads aggressively flush dirty pages.
+  - When cache exceeds 95%, application threads are stalled and forced to assist with eviction, causing severe query latency spikes.\n\n## 3. Installation, Setup & Quickstart
+
+### Prerequisites
+- Node.js >= 20.x
+- npm >= 10.x
+- Docker & Docker Compose (optional for containerized MongoDB)
+
+### Installation & Environment Setup
+Clone the repository and install dependencies:
+```bash
+git clone https://github.com/manthanank/learn-mongodb.git
+cd learn-mongodb
+npm install
+```
+
+Create a local environment file `.env`:
+```env
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/learn-mongodb
+# Or MongoDB Atlas connection string:
+# MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/learn-mongodb?retryWrites=true&w=majority
+```
+
+> **Note on Offline Resilience**: If no `MONGODB_URI` is provided or if the cluster is unreachable, `learn-mongodb` automatically falls back to an ultra-fast in-memory mock engine with pre-seeded enterprise documents.
+
+### Running Development & Test Suites
+```bash
+# Start development server with live reload
+npm run dev
+
+# Run Vitest test suite
+npm test
+
+# Build production bundle
+npm run build
+
+# Start production server
+npm start
+```
+
+### Docker Quickstart
+```bash
+# Build production Docker image
+docker build -t learn-mongodb:latest .
+
+# Run containerized application
+docker run -p 3000:3000 -e PORT=3000 learn-mongodb:latest
+```
+
+---
+
+## 4. CRUD Operations & Query Operators
+
+MongoDB provides expressive querying capabilities with support for field comparison, logical evaluation, element projection, array inspection, and atomic update operators.
+
+### Query Selectors & Filter Operators
+
+| Category | Operator | Description & Syntax |
+| :--- | :--- | :--- |
+| **Comparison** | `$eq`, `$ne` | Matches values that are equal or not equal to a specified value. `{ age: { $eq: 30 } }` |
+| | `$gt`, `$gte` | Greater than, greater than or equal. `{ salary: { $gte: 120000 } }` |
+| | `$lt`, `$lte` | Less than, less than or equal. `{ age: { $lte: 45 } }` |
+| | `$in`, `$nin` | Matches any / none of the values specified in an array. `{ department: { $in: ['Engineering', 'DevOps'] } }` |
+| **Logical** | `$and`, `$or` | Joins query clauses with a logical AND or OR. `{ $or: [{ status: 'A' }, { age: { $lt: 30 } }] }` |
+| | `$not`, `$nor` | Inverts the effect of a query predicate or matches documents that fail all clauses. |
+| **Element** | `$exists` | Matches documents that have the specified field. `{ phoneNumber: { $exists: true } }` |
+| | `$type` | Selects documents if a field is of the specified BSON type. `{ age: { $type: 'int' } }` |
+| **Evaluation** | `$regex` | Selects documents where values match a specified regular expression. `{ email: { $regex: /@enterprise\.io$/i } }` |
+| | `$expr` | Allows the use of aggregation expressions within the query language. `{ $expr: { $gt: ['$spent', '$budget'] } }` |
+
+### Array Query Operators
+- **`$all`**: Matches arrays that contain all elements specified in the query:
+  ```javascript
+  db.users.find({ tags: { $all: ['mongodb', 'typescript'] } });
+  ```
+- **`$elemMatch`**: Matches documents that contain an array field with at least one element that matches all the specified query criteria:
+  ```javascript
+  db.orders.find({
+    items: {
+      $elemMatch: { product: 'Server Rack', quantity: { $gte: 2 }, price: { $lt: 5000 } }
+    }
+  });
+  ```
+- **`$size`**: Selects any document where the array field is a specified size:
+  ```javascript
+  db.users.find({ tags: { $size: 3 } });
+  ```
+
+### Atomic Update Operators
+- **`$set` & `$unset`**: Sets the value of a field or removes the specified field from a document:
+  ```javascript
+  db.users.updateOne(
+    { email: 'alex.morgan@enterprise.io' },
+    { $set: { department: 'Principal Architecture', updatedAt: new Date() } }
+  );
+  ```
+- **`$inc` & `$mul`**: Increments or multiplies the value of a field by a specified amount:
+  ```javascript
+  db.users.updateMany(
+    { department: 'Engineering' },
+    { $inc: { salary: 5000 } }
+  );
+  ```
+- **Array Mutation Operators (`$push`, `$addToSet`, `$pull`, `$pop`)**:
+  ```javascript
+  // $addToSet prevents duplicate elements in an array
+  db.users.updateOne(
+    { _id: ObjectId('65e9b1f7d8e21a001a111111') },
+    { $addToSet: { tags: 'distributed-transactions' } }
+  );
+
+  // $push with modifier options ($each, $slice, $sort)
+  db.users.updateOne(
+    { _id: ObjectId('65e9b1f7d8e21a001a111111') },
+    {
+      $push: {
+        auditLogs: {
+          $each: [{ action: 'LOGIN', timestamp: new Date() }],
+          $slice: -100 // Keep only the latest 100 entries
+        }
+      }
+    }
+  );
+  ```
+- **Positional Update Operators (`$[]` and `$[<identifier>]`)**:
+  ```javascript
+  // Filtered positional operator: update specific elements in nested arrays
+  db.grades.updateMany(
+    { studentId: 101 },
+    { $set: { 'scores.$[elem].curved': true } },
+    { arrayFilters: [{ 'elem.score': { $lt: 70 } }] }
+  );
+  ```\n\n## 5. Aggregation Framework Masterclass
+
+The **MongoDB Aggregation Framework** is a multi-stage data processing pipeline modeled on Unix pipes (`|`). Documents enter a multi-stage pipeline where each stage transforms the stream before passing results to the next.
+
+```
++------------------+     +------------------+     +------------------+     +------------------+
+|      $match      | --> |      $group      | --> |     $lookup      | --> |      $sort       |
+| Filter documents |     | Compute metrics  |     | Left outer join  |     | Order by metric  |
++------------------+     +------------------+     +------------------+     +------------------+
+```
+
+### Essential Pipeline Stages
+
+| Stage | Purpose & Mechanics | Example Syntax |
+| :--- | :--- | :--- |
+| **`$match`** | Filters documents to pass only matching documents to the next stage. Place first to utilize indexes. | `{ $match: { status: 'ACTIVE', age: { $gte: 21 } } }` |
+| **`$project`** | Reshapes documents: includes, excludes, renames, or computes derived fields. | `{ $project: { fullName: { $concat: ['$firstName', ' ', '$lastName'] } } }` |
+| **`$group`** | Groups documents by an `_id` key and computes accumulators (`$sum`, `$avg`, `$min`, `$max`, `$push`). | `{ $group: { _id: '$dept', total: { $sum: 1 }, avgSalary: { $avg: '$salary' } } }` |
+| **`$unwind`** | Deconstructs an array field from the input documents to output a document for each element. | `{ $unwind: { path: '$tags', preserveNullAndEmptyArrays: false } }` |
+| **`$lookup`** | Performs an equality or correlated left outer join with another collection. | See correlated subquery syntax below. |
+| **`$facet`** | Processes multiple aggregation pipelines within a single stage on the same input documents. | Enables multi-dimensional faceted search and pagination. |
+| **`$bucket`** | Categorizes incoming documents into groups (buckets) based on specified boundaries. | `{ $bucket: { groupBy: '$age', boundaries: [20, 30, 40, 50] } }` |
+| **`$addFields`**| Outputs documents containing all existing fields plus newly computed fields. | `{ $addFields: { bonus: { $multiply: ['$salary', 0.15] } } }` |
+| **`$merge`** | Writes pipeline results directly to a target collection (on-demand materialized views). | `{ $merge: { into: 'monthly_summaries', whenMatched: 'replace' } }` |
+
+### Correlated Subqueries with `$lookup`
+MongoDB 5.0+ allows expressive joins with pipeline subqueries, avoiding the limitation of simple equality matching:
+```javascript
+db.orders.aggregate([
+  { $match: { orderDate: { $gte: ISODate('2024-01-01') } } },
+  {
+    $lookup: {
+      from: 'inventory',
+      let: { orderItem: '$itemSku', orderQty: '$quantity' },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $eq: ['$sku', '$$orderItem'] },
+                { $gte: ['$inStock', '$$orderQty'] }
+              ]
+            }
+          }
+        },
+        { $project: { _id: 0, warehouse: 1, inStock: 1 } }
+      ],
+      as: 'stockAvailability'
+    }
+  }
+]);
+```
+
+### Faceted Search & Pagination Pipeline
+Single-pass multi-faceted analytics using `$facet`:
+```javascript
+db.products.aggregate([
+  { $match: { category: 'Electronics', price: { $lte: 1000 } } },
+  {
+    $facet: {
+      // 1. Pagination & Data Slice
+      products: [
+        { $sort: { rating: -1 } },
+        { $skip: 20 },
+        { $limit: 10 }
+      ],
+      // 2. Total Count Metadata
+      metadata: [
+        { $count: 'totalMatching' }
+      ],
+      // 3. Price Histogram Distribution
+      priceDistribution: [
+        {
+          $bucket: {
+            groupBy: '$price',
+            boundaries: [0, 100, 250, 500, 1000],
+            default: 'Over 1000',
+            output: { count: { $sum: 1 } }
+          }
+        }
+      ],
+      // 4. Top Brands
+      topBrands: [
+        { $group: { _id: '$brand', count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 5 }
+      ]
+    }
+  }
+]);
+```
+
+### Pipeline Optimization Rules
+1. **Push Filters Early**: Always place `$match` and `$sort` stages at the very beginning of the pipeline. MongoDB's query planner automatically collapses `$match` into the initial collection scan/index scan.
+2. **Limit Projection Overhead**: If large documents with embedded payloads or images are present, project out unnecessary heavy fields early to minimize memory consumption between stages.
+3. **RAM Constraint (`allowDiskUse`)**: Pipeline stages have a default 100MB RAM limit per stage (in MongoDB 6.0+, sorting stages overflow to disk if needed, but explicit `{ allowDiskUse: true }` guarantees predictable behavior on multi-gigabyte queries).\n\n## 6. Indexing Architecture & The ESR Performance Rule
+
+Indexes in MongoDB are stored as balanced B-Trees (B-Trees in WiredTiger maintain ordered pointer keys pointing directly to disk record IDs). Without indexes, every query results in a full collection scan (**COLLSCAN**), loading every block from disk into RAM.
+
+```
+                  +-----------------------------+
+                  | Root Page: ["M" - "S"]      |
+                  +-----------------------------+
+                     /             |           \
+     +---------------+    +----------------+    +---------------+
+     | Internal Node |    | Internal Node  |    | Internal Node |
+     | ["A" - "L"]   |    | ["M" - "R"]    |    | ["S" - "Z"]   |
+     +---------------+    +----------------+    +---------------+
+         /      \            /       \             /      \
+     +----+    +----+     +----+     +----+     +----+    +----+
+     |Leaf|    |Leaf|     |Leaf|     |Leaf|     |Leaf|    |Leaf|
+     +----+    +----+     +----+     +----+     +----+    +----+
+       |         |          |          |          |         |
+    [Doc1]    [Doc2]     [Doc3]     [Doc4]     [Doc5]    [Doc6]
+```
+
+### The ESR (Equality, Sort, Range) Rule
+When creating compound indexes for queries that filter on equality, sort results, and filter across ranges, the order of fields in the compound index **must** follow the **ESR Rule**:
+
+1. **Equality (`E`)**: Place fields queried with exact matches (`field: value` or `$eq`) first. This narrows down the search space to a contiguous sub-tree.
+2. **Sort (`S`)**: Place fields used in the `sort()` criteria next. Because the index maintains keys in sorted order, the storage engine can return documents directly in the requested order without triggering an expensive, in-memory blocking `SORT` stage.
+3. **Range (`R`)**: Place fields queried with inequalities (`$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$regex`) last. Once a range scan begins on a B-tree, subsequent index keys cannot be leveraged for ordering!
+
+#### Visualizing ESR vs Non-ESR Index Design:
+Consider the query:
+```javascript
+db.users.find({ department: 'Engineering', age: { $gte: 25 } })
+        .sort({ salary: -1 });
+```
+
+| Index Specification | Index Evaluation | Execution Plan Mechanics |
+| :--- | :--- | :--- |
+| `{ age: 1, salary: -1, department: 1 }` | ❌ **Anti-Pattern (R-S-E)** | Scans wide range of `age`. Because `age` is a range, the B-tree order of `salary` is broken. Forces a blocking in-memory `SORT` stage and examines unnecessary documents. |
+| `{ department: 1, age: 1, salary: -1 }` | ⚠️ **Suboptimal (E-R-S)** | Filters `department` rapidly, but because `age` (range) precedes `salary` (sort), MongoDB still cannot use the index for ordering. Results in `SORT` stage. |
+| `{ department: 1, salary: -1, age: 1 }` | ✅ **Optimal (E-S-R)** | Equality filters to `Engineering`. The engine traverses directly along pre-sorted `salary` keys in descending order, checking `age >= 25` as it streams. **Zero in-memory sort required!** |
+
+### Specialized Index Types
+
+#### 1. Partial & Sparse Indexes
+Partial indexes index only documents that meet a specified filter expression, drastically reducing index memory footprint and write overhead:
+```javascript
+// Only index active users, skipping millions of archived/deleted records
+db.users.createIndex(
+  { email: 1 },
+  { partialFilterExpression: { isActive: true } }
+);
+```
+
+#### 2. TTL (Time-To-Live) Indexes
+Automatically purge temporary documents (sessions, OTP codes, audit caches) after a specified duration:
+```javascript
+// Document will be automatically removed 3600 seconds (1 hour) after createdAt
+db.sessions.createIndex(
+  { createdAt: 1 },
+  { expireAfterSeconds: 3600 }
+);
+```
+
+#### 3. Multikey Indexes (Indexing Arrays)
+When an index field holds an array, MongoDB creates an index entry for *every* element in the array:
+```javascript
+db.users.createIndex({ tags: 1 });
+// Restriction: A compound multikey index cannot index more than one array field!
+```
+
+#### 4. Text & Geospatial Indexes
+```javascript
+// Full-text search index across multiple text fields with weights
+db.articles.createIndex(
+  { title: 'text', content: 'text' },
+  { weights: { title: 10, content: 1 } }
+);
+
+// 2dsphere index for geospatial distance calculations
+db.places.createIndex({ location: '2dsphere' });
+```
+
+### Analyzing `explain("executionStats")`
+To diagnose query performance, inspect the execution plan:
+```javascript
+db.users.find({ department: 'Engineering', age: { $gte: 25 } })
+        .sort({ salary: -1 })
+        .explain('executionStats');
+```
+
+Key Metrics to Check:
+- **`stage`**: You want to see `IXSCAN` (Index Scan) followed by `FETCH`, or ideally `PROJECTION_COVERED`. Red flags: `COLLSCAN` (full table scan) and `SORT` (in-memory blocking sort).
+- **`totalDocsExamined` vs `nReturned`**: In an optimal query, the ratio is **1.0** (every document fetched from disk was returned to the client). A ratio > 10.0 indicates missing or poorly ordered index keys.
+- **`totalKeysExamined`**: Number of B-tree entries traversed. If `totalKeysExamined` is much larger than `nReturned`, the index range is too wide.\n\n## 7. Data Modeling & Enterprise Schema Design Patterns
+
+In document databases, schema design is governed by **application access patterns** rather than theoretical third normal form (3NF). Data that is queried together should be stored together.
+
+### Embedding vs. Referencing Decision Matrix
+
+| Criterion | Embed Subdocuments | Reference Documents (`_id`) |
+| :--- | :--- | :--- |
+| **Relationship Cardinality** | 1-to-1, 1-to-Few (e.g., User addresses, items in an invoice) | 1-to-Many (10,000+ items), 1-to-Squillions (logs, sensor telemetry) |
+| **Access Pattern** | Data is read and updated atomically in a single operation | Referenced data is queried independently or in separate modules |
+| **Document Size** | Must remain well under the **16MB BSON limit** | Prevents unbounded document growth |
+| **Consistency Requirements** | Requires atomic single-document updates without transactions | References can use multi-document ACID transactions if needed |
+
+### 5 Enterprise Schema Design Patterns
+
+```
++-----------------------------------------------------------------------------------------+
+|                               ENTERPRISE SCHEMA PATTERNS                                |
+|                                                                                         |
+|  [SUBSET PATTERN]             [BUCKET PATTERN]             [OUTLIER PATTERN]            |
+|  Embed top 10 reviews only;   Group IoT / time-series      Flag popular entities to     |
+|  offload history to separate  metrics into 1-hour chunks;  prevent unbounded array      |
+|  overflow collection.         reduces index RAM footprint. growth beyond 16MB.          |
++-----------------------------------------------------------------------------------------+
+```
+
+#### 1. The Subset Pattern
+**Problem**: An e-commerce product has 20,000 reviews. Loading the product document requires reading megabytes of reviews that users rarely scroll through.
+**Solution**: Embed only the top 10 most helpful or recent reviews in the `products` document. Store the full review history in a dedicated `reviews` collection.
+
+#### 2. The Bucket Pattern (Time-Series & IoT)
+**Problem**: Storing one document per sensor measurement creates millions of documents, exploding index sizes and metadata overhead.
+**Solution**: Group measurements into 1-hour or 1-day "buckets" containing a fixed-size array of data points with pre-aggregated rolling metrics:
+```javascript
+{
+  sensorId: 'TEMP_US_WEST_01',
+  date: ISODate('2024-03-01T00:00:00Z'),
+  count: 60,
+  minTemp: 18.2,
+  maxTemp: 24.5,
+  readings: [
+    { minute: 0, temp: 18.5 },
+    { minute: 1, temp: 18.6 }
+  ]
+}
+```
+
+#### 3. The Outlier Pattern
+**Problem**: Most authors have 1 to 5 books, but Stephen King has published 80+. Sizing arrays for edge cases harms performance for 99.9% of typical users.
+**Solution**: Set a ceiling on embedded arrays (e.g., 50 items). When an entity exceeds this threshold, set `hasOverflow: true` and direct subsequent writes to an overflow collection.
+
+#### 4. The Schema Versioning Pattern
+**Problem**: Altering schemas in large relational databases requires locking tables with expensive migrations.
+**Solution**: Add a `schemaVersion: 2` integer field to every document. Application code can support multiple versions concurrently without requiring instant offline database migrations.
+
+---
+
+## 8. Transactions, ACID & Distributed Consistency
+
+Since version 4.0 (replica sets) and 4.2 (sharded clusters), MongoDB supports full **Multi-Document ACID Transactions** across multiple collections, databases, and shards.
+
+### Executing Multi-Document ACID Transactions (Node.js & Mongoose)
+```typescript
+import mongoose from 'mongoose';
+
+async function transferFunds(fromUserId: string, toUserId: string, amount: number): Promise<void> {
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction({
+      readConcern: { level: 'snapshot' },
+      writeConcern: { w: 'majority', j: true },
+      maxCommitTimeMS: 5000
+    });
+
+    // Step 1: Deduct from sender
+    const sender = await UserModel.findOneAndUpdate(
+      { _id: fromUserId, balance: { $gte: amount } },
+      { $inc: { balance: -amount } },
+      { session, new: true }
+    );
+
+    if (!sender) {
+      throw new Error('Insufficient funds or sender not found');
+    }
+
+    // Step 2: Credit receiver
+    const receiver = await UserModel.findByIdAndUpdate(
+      toUserId,
+      { $inc: { balance: amount } },
+      { session, new: true }
+    );
+
+    if (!receiver) {
+      throw new Error('Receiver account not found');
+    }
+
+    // Step 3: Commit transaction across replica set
+    await session.commitTransaction();
+  } catch (error) {
+    // Step 4: Abort on failure
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    session.endSession();
+  }
+}
+```
+
+### Write Concerns (`w` and `j`)
+Specifies the level of acknowledgement requested from MongoDB for write operations:
+- **`w: 1`**: Write is acknowledged as soon as the **Primary** node writes to its memory cache. Risk: If the primary crashes before replicating to secondaries, the write is lost.
+- **`w: 'majority'`**: Write is acknowledged only after a majority of voting replica set members have received and committed the write to their memory. Guarantees safety against rollbacks.
+- **`j: true` (Journal)**: Write is acknowledged only after being written to the on-disk Write-Ahead Log (WAL) journal, guaranteeing crash durability.
+- **`wtimeout`**: Prevents writes from blocking indefinitely if replica nodes are unreachable.
+
+### Read Concerns & Read Preferences
+
+#### Read Concerns
+- **`"local"`**: Returns the node's most recent data without verifying if it was committed to a majority.
+- **`"majority"`**: Returns data that has been written to and acknowledged by a majority of nodes. Immune to failover rollbacks.
+- **`"linearizable"`**: Returns data that reflects all successfully acknowledged majority writes prior to the read. Primary communicates with peers before answering, eliminating stale reads.
+- **`"snapshot"`**: Used in transactions. Guarantees a consistent snapshot view across all reads.
+
+#### Read Preferences
+- **`primary`**: All reads go to the Primary (strict consistency).
+- **`primaryPreferred`**: Reads from Primary if available, otherwise Secondaries.
+- **`secondary`**: All reads go to Secondaries (offloading read traffic, eventual consistency).
+- **`secondaryPreferred`**: Reads from Secondaries, falling back to Primary.
+- **`nearest`**: Reads from the member with the lowest network latency.\n\n## 9. Replication, High Availability & Sharded Clusters
+
+### Replica Set Architecture
+A **Replica Set** in MongoDB is a cluster of `mongod` instances that maintain the exact same dataset, providing high availability, redundancy, and automated failover.
+
+```
+                  +--------------------------------+
+                  |         PRIMARY NODE           |
+                  | Accepts all Writes & Reads     |
+                  | Writes to Oplog (local.oplog)  |
+                  +--------------------------------+
+                             /            \
+              Replication   /              \  Replication
+             (Async Stream)/                \ (Async Stream)
+                          v                  v
+       +--------------------+              +--------------------+
+       |   SECONDARY NODE   |              |   SECONDARY NODE   |
+       |  Replays OpLog     | <----------> |  Replays OpLog     |
+       |  Can serve Reads   |  Heartbeats  |  Can serve Reads   |
+       +--------------------+  (Every 2s)  +--------------------+
+```
+
+- **Primary Node**: The only node that accepts write operations. Records all mutations sequentially into its capped **Oplog** (`local.oplog.rs`).
+- **Secondary Nodes**: Continuously pull and apply oplog entries from the primary asynchronously.
+- **Failover & Elections**: Nodes exchange heartbeats every 2 seconds. If a primary fails to respond for 10 seconds, secondaries initiate a Raft-inspired election. The candidate with the most up-to-date oplog is elected primary.
+- **Arbiter Nodes**: Voting-only members that hold no data. Discouraged in modern architectures; prefer dedicated odd-numbered data nodes (3, 5, or 7 nodes).
+
+---
+
+### Sharded Clusters: Horizontal Scaling
+When data exceeds disk capacity or write throughput saturates a single primary, MongoDB splits collections across multiple independent replica sets (**Shards**).
+
+```
++-----------------------------------------------------------------------+
+|                           CLIENT / DRIVER                             |
++-----------------------------------------------------------------------+
+                                   |
+                                   v
++-----------------------------------------------------------------------+
+|                    MONGOS (ROUTING / QUERY TIER)                      |
+| Evaluates query filters against cached chunk routing tables.          |
++-----------------------------------------------------------------------+
+                |                                     |
+                v                                     v
++-------------------------------+     +---------------------------------+
+|   CONFIG SERVER REPLICA SET   |     |       SHARD REPLICA SETS        |
+| Holds cluster metadata &      |     | Shard 1: Data Chunks [A - M]    |
+| chunk ranges mapping table.   |     | Shard 2: Data Chunks [N - Z]    |
++-------------------------------+     +---------------------------------+
+```
+
+### Choosing a Shard Key
+The shard key determines how documents are distributed across shards:
+1. **High Cardinality**: Must have many distinct values. Sharding on `country` (low cardinality) creates jumbo chunks that cannot be split across shards.
+2. **Even Frequency Distribution**: Avoid keys where 90% of documents share one value.
+3. **Avoid Monotonically Increasing Keys**: Sharding by auto-incrementing IDs or timestamps creates a **hotspot**, routing 100% of inserts to a single shard!
+4. **Hashed Sharding vs Range Sharding**:
+   - **Hashed Sharding**: Distributes inserts evenly across all shards, eliminating write hotspots. (Drawback: Range queries become scatter-gather).
+   - **Range Sharding**: Clusters contiguous values on the same shard, optimizing range queries.
+
+---
+
+## 10. Mongoose 8+ ODM Integration
+
+Mongoose provides schema-based modeling for MongoDB with type inference, lifecycle hooks, and validation.
+
+### Modern Mongoose 8 TypeScript Pattern
+```typescript
+import mongoose, { Schema, InferSchemaType, Model } from 'mongoose';
+
+// 1. Define Schema
+const customerSchema = new Schema(
+  {
+    companyName: { type: String, required: true, trim: true },
+    tier: { type: String, enum: ['Standard', 'Enterprise'], default: 'Standard' },
+    annualSpend: { type: Number, default: 0, min: 0 },
+    billingEmail: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true
+    }
+  },
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+  }
+);
+
+// 2. Infer TypeScript Type from Schema definition
+export type ICustomer = InferSchemaType<typeof customerSchema>;
+
+// 3. Document Lifecycle Middleware (Pre/Post Hooks)
+customerSchema.pre('save', function (next) {
+  if (this.annualSpend >= 100000 && this.tier !== 'Enterprise') {
+    this.tier = 'Enterprise';
+  }
+  next();
+});
+
+// 4. Virtual Property
+customerSchema.virtual('isHighValue').get(function (this: ICustomer) {
+  return this.annualSpend > 50000;
+});
+
+export const Customer: Model<ICustomer> = mongoose.model<ICustomer>('Customer', customerSchema);
+```
+
+---
+
+## 11. Production Hardening, Security & Operations
+
+### Authentication & Authorization (RBAC)
+- **SCRAM (Salted Challenge Response)**: Default authentication mechanism (`SCRAM-SHA-256`) preventing plaintext password transmission.
+- **x.509 Certificates**: Enterprise authentication using TLS client certificates for mutual authentication.
+- **Role-Based Access Control (RBAC)**: Follow the principle of least privilege:
+  ```javascript
+  db.createUser({
+    user: 'appServiceUser',
+    pwd: 'SuperSecurePasswordHere!',
+    roles: [
+      { role: 'readWrite', db: 'production_app' },
+      { role: 'read', db: 'inventory_cache' }
+    ]
+  });
+  ```
+
+### Encryption at Rest & In-Flight
+- **In-Flight Encryption**: Mandatory TLS 1.3 encryption across all client-to-cluster and inter-node replica communications.
+- **Client-Side Field Level Encryption (CSFLE)**: Encrypts sensitive fields (SSNs, credit cards) locally on the client driver before sending over the network, ensuring the database engine never sees plaintext data.
+- **Queryable Encryption (QE)**: MongoDB 6.0+ allows running equality and range queries on encrypted data fields without decrypting them on the server!
+
+### Backup & Disaster Recovery
+- **Logical Backups (`mongodump` / `mongorestore`)**: Exports BSON data files. Best for development and smaller datasets.
+  ```bash
+  mongodump --uri="mongodb://localhost:27017/learn-mongodb" --out=/backup/$(date +%F)
+  mongorestore --uri="mongodb://localhost:27017/learn-mongodb" /backup/2024-03-01/learn-mongodb
+  ```
+- **Physical Continuous Snapshots**: In enterprise and Atlas deployments, disk volume snapshots with point-in-time recovery (PITR) replay the oplog to restore the exact state to any second.\n\n## 12. 40 Senior MongoDB Interview Questions & In-Depth Answers
+
+<details>
+<summary><strong>Q1: What is the difference between BSON and JSON, and why does MongoDB use BSON?</strong></summary>
+
+**Answer**: JSON is a human-readable, text-based serialization format that supports only basic primitives (string, number, boolean, array, object, null). BSON (Binary JSON) is a binary-encoded serialization format that:
+1. Adds native support for rich enterprise types like `Date`, `ObjectId`, `Decimal128` (arbitrary-precision financial decimals), `Binary` (UUIDs, raw bytes), and `64-bit Integers`.
+2. Stores length prefixes for strings and nested documents, enabling the query engine to rapidly skip irrelevant subtrees in memory without parsing every character.
+3. Is optimized for fast traversal and minimal encoding/decoding overhead in client drivers.
+</details>
+
+<details>
+<summary><strong>Q2: How does the WiredTiger cache work, and what happens when dirty cache exceeds thresholds?</strong></summary>
+
+**Answer**: By default, WiredTiger reserves `50% of (RAM - 1GB)` for its working cache. Memory holds clean pages (read from disk) and dirty pages (modified in memory).
+- Checkpoints occur every 60 seconds (or when 2GB dirty data accumulates) to write consistent snapshots to disk.
+- When cache usage exceeds 80%, background eviction threads wake up to write dirty pages or discard clean pages.
+- If cache reaches 95% or dirty data exceeds 20%, client application threads are forced to assist in eviction, causing catastrophic query latency spikes.
+</details>
+
+<details>
+<summary><strong>Q3: Explain the ESR (Equality, Sort, Range) rule in compound index design.</strong></summary>
+
+**Answer**: When building a compound index for queries with filtering, sorting, and range conditions:
+1. **Equality (`E`)**: Exact match fields (`field: value`) must come first to partition the B-tree into contiguous buckets.
+2. **Sort (`S`)**: Sorting keys must come second so that the storage engine traverses documents in sorted order directly from the index, eliminating an in-memory blocking `SORT` stage.
+3. **Range (`R`)**: Range filters (`$gt`, `$lt`, `$in`) must come last. Traversing a range breaks the ordering of subsequent index keys in the B-tree.
+</details>
+
+<details>
+<summary><strong>Q4: What is the 16MB document size limit in MongoDB, and what architectural patterns solve it?</strong></summary>
+
+**Answer**: MongoDB limits individual BSON documents to 16MB to prevent unbounded memory consumption and excessive network serialization delays. Architectural patterns to bypass this include:
+1. **GridFS**: Splits files or binary payloads into chunks (default 255KB) across two collections (`fs.files` and `fs.chunks`).
+2. **The Subset Pattern**: Embeds only the latest $N$ entries (e.g. 10 reviews) in the main document, storing the rest in a child collection.
+3. **The Bucket Pattern**: Groups time-series or sensor readings into discrete documents spanning 1 hour or 1 day.
+</details>
+
+<details>
+<summary><strong>Q5: What is a Multikey index, and what are its critical limitations?</strong></summary>
+
+**Answer**: A multikey index is created when an indexed field contains an array. MongoDB generates an index entry for every element in that array.
+- **Limitation**: A compound multikey index **cannot** contain more than one array field (e.g., you cannot index `{ tags: 1, categories: 1 }` if both `tags` and `categories` are arrays in the same document), because it would produce an exponential Cartesian product of index entries.
+</details>
+
+<details>
+<summary><strong>Q6: How does MongoDB achieve high availability in a Replica Set during Primary node failure?</strong></summary>
+
+**Answer**: Replica set members exchange heartbeats every 2 seconds. If secondaries miss heartbeats from the primary for 10 seconds, an election is triggered:
+1. A secondary node with election priority > 0 and the highest oplog optime nominates itself.
+2. It requests votes from all reachable members.
+3. If it secures a strict majority of votes (e.g. $\lfloor N/2 \rfloor + 1$), it transitions to Primary.
+4. If network partitioning prevents a majority, the cluster becomes read-only until quorum is restored.
+</details>
+
+<details>
+<summary><strong>Q7: What is the difference between Write Concern `w: 1` and `w: "majority"`?</strong></summary>
+
+**Answer**:
+- `w: 1`: Write is acknowledged as soon as the Primary commits it to its local in-memory cache. If the Primary crashes before replicating to secondaries, the committed write will be lost on failover.
+- `w: "majority"`: Write is acknowledged only after a strict majority of voting replica set members have received and committed the write to their local storage. This guarantees zero write loss and immunity to rollbacks.
+</details>
+
+<details>
+<summary><strong>Q8: What is the Journal in MongoDB, and what is the role of `j: true`?</strong></summary>
+
+**Answer**: The Journal is a sequential Write-Ahead Log (WAL) on disk. Checkpoints flush cache to disk only every 60s; in the interim, mutations are appended to the journal every 100ms. Specifying `j: true` forces the engine to flush the journal buffer to physical disk before acknowledging the write, guaranteeing crash durability.
+</details>
+
+<details>
+<summary><strong>Q9: How do Multi-Document ACID Transactions work in MongoDB?</strong></summary>
+
+**Answer**: Available in replica sets (4.0+) and sharded clusters (4.2+), multi-document transactions use client sessions (`startSession()`).
+- All operations inside the transaction use Snapshot Isolation (`readConcern: 'snapshot'`).
+- Changes are held in a transaction buffer until committed.
+- When `commitTransaction()` is invoked, a two-phase commit is orchestrated across all participating shards and replica set nodes with write concern `w: "majority"`.
+</details>
+
+<details>
+<summary><strong>Q10: What is the difference between `$lookup` with simple equality vs `$lookup` with pipeline?</strong></summary>
+
+**Answer**:
+- Simple `$lookup` (`localField` / `foreignField`): Performs a basic left outer join on single matching field equalities.
+- Pipeline `$lookup` (using `let` and `pipeline`): Allows correlated subqueries with complex join conditions (`$expr`), filtering, projections, sorting, and nested aggregations on the foreign collection before returning matched documents.
+</details>
+
+<details>
+<summary><strong>Q11: Explain the Oplog (`local.oplog.rs`) and how secondaries sync data.</strong></summary>
+
+**Answer**: The Oplog is a capped collection containing idempotent records of all data mutations on the primary node. Secondaries tail the primary's oplog using tailable cursors and replay operations asynchronously. Because all oplog operations are idempotent, replaying them multiple times yields the exact same state.
+</details>
+
+<details>
+<summary><strong>Q12: What is the difference between Range Sharding and Hashed Sharding?</strong></summary>
+
+**Answer**:
+- **Range Sharding**: Divides data into contiguous ranges based on the shard key values. Documents with similar keys reside on the same shard, optimizing range queries (`$gte`, `$lte`), but risking write hotspots if keys are monotonically increasing.
+- **Hashed Sharding**: Uses MD5 hashes of the shard key to scatter documents uniformly across all shards, eliminating write hotspots at the cost of turning range scans into scatter-gather queries.
+</details>
+
+<details>
+<summary><strong>Q13: Why is a monotonically increasing field (e.g. `ObjectId` or timestamp) bad as a range shard key?</strong></summary>
+
+**Answer**: Every new document has a value greater than all existing documents. Under range sharding, the max-range chunk will always reside on one single shard, routing 100% of all insert traffic to that one machine while all other shards sit idle.
+</details>
+
+<details>
+<summary><strong>Q14: What is a Covered Query in MongoDB?</strong></summary>
+
+**Answer**: A query where:
+1. All fields in the query predicate are part of an index.
+2. All fields returned in the projection (`{ field: 1, _id: 0 }`) are part of that same index.
+The query engine resolves the request entirely within RAM from the B-tree index keys without examining or fetching any documents from disk (`totalDocsExamined: 0`).
+</details>
+
+<details>
+<summary><strong>Q15: What is the purpose of `$facet` in the aggregation framework?</strong></summary>
+
+**Answer**: `$facet` executes multiple parallel aggregation sub-pipelines on the exact same input document stream in a single query pass. It is the industry standard for creating faceted navigation, real-time analytics histograms, and paginated search results with total count metadata.
+</details>
+
+<details>
+<summary><strong>Q16: How does the Schema Versioning pattern eliminate database migration downtime?</strong></summary>
+
+**Answer**: Instead of locking database tables to add or rename columns, each document includes a `schemaVersion: 2` integer. Application code contains adapter logic: when reading version 1 documents, it transforms them in-flight to version 2 structures, updating the document to version 2 on subsequent saves.
+</details>
+
+<details>
+<summary><strong>Q17: What is the difference between Read Concern `"local"` and `"majority"`?</strong></summary>
+
+**Answer**:
+- `"local"`: Returns the most recent data on the queried node without checking whether other replica members have received it. Subject to rollback if the primary crashes before replicating.
+- `"majority"`: Reads only data that has been acknowledged by a majority of voting nodes. The read view is immune to failover rollbacks.
+</details>
+
+<details>
+<summary><strong>Q18: What causes an in-memory `SORT` stage, and what is its memory limit?</strong></summary>
+
+**Answer**: If a query includes a `.sort()` clause that cannot use an existing B-tree index, MongoDB must load all candidate documents into RAM and sort them. Prior to MongoDB 6.0, this was limited to 100MB; exceeding it resulted in an error unless `{ allowDiskUse: true }` was enabled.
+</details>
+
+<details>
+<summary><strong>Q19: What is a Partial Index, and why is it preferred over a Sparse Index?</strong></summary>
+
+**Answer**: A sparse index only indexes documents where the indexed field exists (even if null). A partial index allows any expressive filter expression (`partialFilterExpression: { status: 'ACTIVE', score: { $gt: 50 } }`), providing far greater flexibility, smaller index size, and better write performance.
+</details>
+
+<details>
+<summary><strong>Q20: What is a TTL Index, and what are its operational constraints?</strong></summary>
+
+**Answer**: TTL (Time-To-Live) indexes automatically remove documents after a set duration based on a date field. Constraints:
+- Must be a single-field index on a `Date` type field.
+- Cannot be applied to compound indexes.
+- Capped collections do not support TTL indexes.
+- A background thread runs every 60 seconds to delete expired documents.
+</details>
+
+<details>
+<summary><strong>Q21: How do MongoDB Atlas Search and Lucene integration differ from standard `$text` indexes?</strong></summary>
+
+**Answer**: Standard `$text` indexes use basic stemmers and stop-word dictionaries stored in WiredTiger. Atlas Search embeds Apache Lucene directly within the `mongot` process, providing full fuzzy search, autocomplete, custom tokenizers, faceting, synonym mapping, and BM25 relevance scoring via the `$search` aggregation stage.
+</details>
+
+<details>
+<summary><strong>Q22: Explain the Outlier Pattern with a real-world example.</strong></summary>
+
+**Answer**: When 99.9% of documents have small arrays (e.g. Twitter users with < 500 followers) but 0.01% have millions of entries (celebrity accounts), embedding all followers into one document hits the 16MB BSON limit. The Outlier pattern sets a flag `isOutlier: true` on celebrity documents and redirects excess followers to an overflow collection.
+</details>
+
+<details>
+<summary><strong>Q23: What is the Bucket Pattern and why is it essential for IoT / Time-Series data?</strong></summary>
+
+**Answer**: Instead of inserting one document per telemetry reading (which creates billions of tiny documents and massive index overhead), the Bucket pattern groups readings for a given sensor into a single document representing a time window (e.g., 1 hour), holding an array of 60 readings with pre-aggregated `min`, `max`, and `avg`.
+</details>
+
+<details>
+<summary><strong>Q24: What is an Arbiter node and why should you avoid it in production?</strong></summary>
+
+**Answer**: An arbiter is a replica set member that participates in elections to break ties but stores no data. It should be avoided because:
+- It cannot satisfy read operations.
+- If an arbiter is present with a two-data-node set, losing one data node prevents satisfying majority write concerns (`w: "majority"`).
+- Always deploy an odd number of data-bearing nodes instead.
+</details>
+
+<details>
+<summary><strong>Q25: What is Client-Side Field Level Encryption (CSFLE)?</strong></summary>
+
+**Answer**: CSFLE encrypts sensitive data (credit cards, SSNs) directly in the client application driver using a Customer Master Key (CMK) hosted in a KMS (AWS KMS, Azure Key Vault, HashiCorp Vault) before transmitting over the network. The MongoDB server stores and processes ciphertext only, preventing exposure even if database files or server memory are compromised.
+</details>
+
+<details>
+<summary><strong>Q26: What is the difference between `$push` and `$addToSet` in array updates?</strong></summary>
+
+**Answer**:
+- `$push`: Appends an item to an array regardless of whether it already exists (allows duplicates).
+- `$addToSet`: Treats the array as a mathematical set, appending the value only if it does not already exist in the array.
+</details>
+
+<details>
+<summary><strong>Q27: How does `explain("executionStats")` reveal query performance bottlenecks?</strong></summary>
+
+**Answer**: Look for:
+1. `COLLSCAN` (collection scan) vs `IXSCAN` (index scan).
+2. `totalDocsExamined` vs `nReturned`: A high ratio indicates scanning non-matching documents.
+3. `SORT` stage: Indicates missing index for sorting.
+4. `executionTimeMillis`: Total server-side execution time.
+</details>
+
+<details>
+<summary><strong>Q28: How do Mongoose Pre and Post hooks differ?</strong></summary>
+
+**Answer**:
+- **Pre hooks** (`schema.pre('save', ...)`): Run before an operation executes. Ideal for sanitization, password hashing, or business logic validation. Can interrupt execution by throwing an error.
+- **Post hooks** (`schema.post('save', ...)`): Run after an operation completes. Ideal for logging, audit trails, and triggering external asynchronous notifications.
+</details>
+
+<details>
+<summary><strong>Q29: What is the difference between Document Middleware and Query Middleware in Mongoose?</strong></summary>
+
+**Answer**:
+- Document middleware (`save`, `validate`, `remove`): `this` refers to the document instance being modified.
+- Query middleware (`find`, `findOneAndUpdate`, `updateMany`): `this` refers to the Query object being executed, not the document itself.
+</details>
+
+<details>
+<summary><strong>Q30: How does Mongoose `populate()` work, and what is its performance implication?</strong></summary>
+
+**Answer**: `populate()` is an application-level join. Mongoose issues a secondary query (`Model.find({ _id: { $in: ids } })`) behind the scenes and stitches the returned documents in Node.js memory. In high-throughput systems, deep or chained `populate()` calls cause $N+1$ query cascades; use `$lookup` in aggregation pipelines for single-query database joins.
+</details>
+
+<details>
+<summary><strong>Q31: What is the difference between `$unwind` with and without `preserveNullAndEmptyArrays`?</strong></summary>
+
+**Answer**: By default, `$unwind` discards input documents if the array field is null, missing, or empty (`[]`). Setting `preserveNullAndEmptyArrays: true` ensures that documents without array elements are preserved in the pipeline output with null values.
+</details>
+
+<details>
+<summary><strong>Q32: What is Jumbo Chunk in a sharded cluster and how is it resolved?</strong></summary>
+
+**Answer**: A chunk is flagged as "jumbo" when it exceeds the maximum chunk size (default 64MB) and cannot be split because all documents share the exact same shard key value. It is resolved by refining the shard key with an additional suffix field to increase cardinality.
+</details>
+
+<details>
+<summary><strong>Q33: How does MongoDB handle Split-Brain scenarios during network partitions?</strong></summary>
+
+**Answer**: MongoDB requires a strict majority quorum ($\\lfloor N/2 \\rfloor + 1$) of voting nodes to elect or maintain a Primary. If a network partition isolates a Primary with only a minority of nodes, that Primary automatically steps down to Secondary within 10 seconds, preventing split-brain writes.
+</details>
+
+<details>
+<summary><strong>Q34: What is Queryable Encryption (introduced in MongoDB 6.0)?</strong></summary>
+
+**Answer**: An industry-first cryptographic breakthrough that allows client applications to execute randomized equality and range queries on encrypted fields directly on the server without ever decrypting the data on the database host.
+</details>
+
+<details>
+<summary><strong>Q35: What is the difference between `$merge` and `$out` in aggregation pipelines?</strong></summary>
+
+**Answer**:
+- `$out`: Replaces the entire target collection with the pipeline results, dropping existing indexes and data.
+- `$merge`: Incrementally merges pipeline output into an existing collection (supporting insert, update, replace, or keep), allowing on-demand materialized views without dropping collections.
+</details>
+
+<details>
+<summary><strong>Q36: Explain the difference between `findByIdAndUpdate()` and `save()` in Mongoose.</strong></summary>
+
+**Answer**:
+- `findByIdAndUpdate()`: Issues a direct `findAndModify` command to MongoDB. Bypasses document middleware (`pre('save')`) unless explicitly configured.
+- `save()`: Loads the full document into memory, applies all schema validations and document pre/post hooks, and issues an atomic update.
+</details>
+
+<details>
+<summary><strong>Q37: What is Read Preference `nearest` and when should it be used?</strong></summary>
+
+**Answer**: `nearest` directs read queries to the replica set member with the lowest network latency (measured via periodic pings). It is ideal for geographically distributed read-heavy clusters where eventual consistency is acceptable.
+</details>
+
+<details>
+<summary><strong>Q38: What are Capped Collections and where are they used?</strong></summary>
+
+**Answer**: Fixed-size circular collections that overwrite the oldest documents when allocated space is full. They maintain insertion order on disk without requiring indexes, making them ideal for high-throughput logging, telemetry, and oplog replication.
+</details>
+
+<details>
+<summary><strong>Q39: How does the Positional Operator `$` work in array updates?</strong></summary>
+
+**Answer**: The `$` operator represents the index of the first array element that matched the query condition:
+`db.students.updateOne({ _id: 1, 'grades.course': 'CS101' }, { $set: { 'grades.$.passed': true } })`
+</details>
+
+<details>
+<summary><strong>Q40: How do you perform database migrations reliably in enterprise MongoDB?</strong></summary>
+
+**Answer**:
+1. Implement Schema Versioning (`schemaVersion: N`).
+2. Dual-write / Dual-read in application services.
+3. Run background idempotency workers in batches using cursor streams and bulk writes (`bulkWrite`) with small chunks to avoid memory starvation and lock contention.
+</details>
+
+---
+
+## 13. Comprehensive MongoDB Query & Aggregation Cheat Sheet
+
+### Basic Queries & Filters
+```javascript
+// Equality & Comparison
+db.users.find({ age: { $gte: 21, $lte: 40 } });
+
+// In Array & Logical OR
+db.users.find({ $or: [{ department: 'Engineering' }, { salary: { $gt: 150000 } }] });
+
+// Regular Expression & Case Insensitivity
+db.users.find({ email: { $regex: '@enterprise\\.io$', $options: 'i' } });
+
+// Array contains all
+db.users.find({ tags: { $all: ['mongodb', 'typescript'] } });
+
+// Array element match
+db.orders.find({ items: { $elemMatch: { sku: 'A100', qty: { $gte: 5 } } } });
+```
+
+### Atomic Updates & Arrays
+```javascript
+// Set fields & update date
+db.users.updateOne({ _id: id }, { $set: { status: 'ACTIVE' }, $currentDate: { updatedAt: true } });
+
+// Atomic Increment
+db.users.updateOne({ _id: id }, { $inc: { loginCount: 1 } });
+
+// Add unique element to array
+db.users.updateOne({ _id: id }, { $addToSet: { roles: 'ADMIN' } });
+
+// Push with slice modifier (keep latest 50)
+db.users.updateOne({ _id: id }, { $push: { logs: { $each: [newLog], $slice: -50 } } });
+
+// Remove item from array
+db.users.updateOne({ _id: id }, { $pull: { tags: 'deprecated' } });
+```
+
+### Essential Aggregation Stages
+```javascript
+// Match -> Group -> Sort -> Limit
+db.sales.aggregate([
+  { $match: { status: 'COMPLETED' } },
+  { $group: { _id: '$region', totalRevenue: { $sum: '$amount' }, avgOrder: { $avg: '$amount' } } },
+  { $sort: { totalRevenue: -1 } },
+  { $limit: 5 }
+]);
+
+// Lookup (Left Join)
+db.orders.aggregate([
+  {
+    $lookup: {
+      from: 'users',
+      localField: 'userId',
+      foreignField: '_id',
+      as: 'customer'
+    }
+  },
+  { $unwind: '$customer' }
+]);
+```
+
+### Index Management Commands
+```javascript
+// List indexes
+db.users.getIndexes();
+
+// Compound Index (ESR)
+db.users.createIndex({ department: 1, salary: -1, age: 1 });
+
+// Partial Index
+db.users.createIndex({ email: 1 }, { unique: true, partialFilterExpression: { isActive: true } });
+
+// TTL Index (1 hour expiry)
+db.tokens.createIndex({ createdAt: 1 }, { expireAfterSeconds: 3600 });
+
+// Explain Query Execution Stats
+db.users.find({ department: 'Engineering' }).explain('executionStats');
+```
+
+---
+
+## 14. Contributing, Governance & Support
+
+Contributions are warmly welcomed! Please follow these steps:
+1. Fork the repository and create a feature branch (`git checkout -b feat/aggregation-stage`).
+2. Run test suites to ensure 100% test pass rate (`npm test`).
+3. Ensure TypeScript builds without errors (`npm run build`).
+4. Submit a Pull Request following our [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md).
+
+### Community & Sponsorship
+Created and maintained with precision by **Manthan Ankolekar**.
+
+- [GitHub Profile](https://github.com/manthanank)
+- [LinkedIn Profile](https://linkedin.com/in/manthanank)
+- [Sponsor on GitHub](https://github.com/sponsors/manthanank)
+
+---
+
+### License
+This project is licensed under the [ISC License](LICENSE).\n

@@ -1,0 +1,12 @@
+---
+description: Cursor rules for learn-mongodb project
+globs: ["src/**/*.ts", "public/**/*", "package.json"]
+---
+
+# Cursor AI Rules for learn-mongodb
+
+- **TypeScript Standard**: ES2022, NodeNext resolution, strict null checks.
+- **Imports**: Always use explicit `.js` extension on relative module imports.
+- **Express 5 & Mongoose 8**: Ensure all route handlers are async-safe with error delegation.
+- **Database Fallback**: Never require a live MongoDB Atlas connection to run tests or local development; verify `mockDb` fallback handles disconnected states.
+- **Index Recommendations**: Follow the ESR (Equality, Sort, Range) rule when designing compound indexes.
