@@ -1,4 +1,4 @@
-# Complete Guide to MongoDB 8 & Mongoose 8 Enterprise Architecture
+# Learn MongoDB: The Complete Beginner-to-Expert Masterclass
 
 [![Build and Publish Docker Image to DockerHub](https://github.com/manthanank/learn-mongodb/actions/workflows/docker.yml/badge.svg)](https://github.com/manthanank/learn-mongodb/actions/workflows/docker.yml)
 [![Releases](https://github.com/manthanank/learn-mongodb/actions/workflows/releases.yml/badge.svg)](https://github.com/manthanank/learn-mongodb/actions/workflows/releases.yml)
@@ -9,29 +9,248 @@
 [![Vitest](https://img.shields.io/badge/Tested%20with-Vitest-yellow.svg?logo=vitest)](https://vitest.dev/)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
-Welcome to the definitive, production-grade guide and interactive query/aggregation sandbox for **MongoDB 8** and **Mongoose 8**. Designed for senior software engineers, distributed systems architects, and full-stack developers, this repository covers everything from storage engine internals and WiredTiger memory mechanics to the Aggregation Framework, the ESR indexing rule, multi-document ACID transactions, replication, and sharding.
+A definitive, production-grade **beginner-to-expert technical guide** and interactive sandbox for **MongoDB 8 & Mongoose 8**. This curriculum starts with zero-prerequisite document database concepts, BSON anatomy, and everyday CRUD operations, advances through WiredTiger storage engine internals and memory mechanics, dives deep into the Aggregation Framework and ESR index optimization, and culminates in multi-document ACID transactions, distributed sharding, and high-availability replica sets.
 
 ---
 
-## 📑 Table of Contents
-1. [Executive Overview & Core Architecture](#1-executive-overview--core-architecture)
-2. [WiredTiger Storage Engine Deep Dive](#2-wiredtiger-storage-engine-deep-dive)
-3. [Installation, Setup & Quickstart](#3-installation-setup--quickstart)
-4. [CRUD Operations & Query Operators](#4-crud-operations--query-operators)
-5. [Aggregation Framework Masterclass](#5-aggregation-framework-masterclass)
-6. [Indexing Architecture & The ESR Performance Rule](#6-indexing-architecture--the-esr-performance-rule)
-7. [Data Modeling & Enterprise Schema Design Patterns](#7-data-modeling--enterprise-schema-design-patterns)
-8. [Transactions, ACID & Distributed Consistency](#8-transactions-acid--distributed-consistency)
-9. [Replication, High Availability & Sharded Clusters](#9-replication-high-availability--sharded-clusters)
-10. [Mongoose 8+ ODM Integration](#10-mongoose-8-odm-integration)
-11. [Production Hardening, Security & Operations](#11-production-hardening-security--operations)
-12. [40 Senior MongoDB Interview Questions & In-Depth Answers](#12-40-senior-mongodb-interview-questions--in-depth-answers)
-13. [Comprehensive MongoDB Query & Aggregation Cheat Sheet](#13-comprehensive-mongodb-query--aggregation-cheat-sheet)
-14. [Contributing, Governance & Support](#14-contributing-governance--support)
+## Pedagogical Roadmap: Beginner to Expert
+
+```text
++-----------------------------------------------------------------------------------------------+
+|                                 THE MONGODB LEARNING JOURNEY                                  |
++-------------------+-------------------+-----------------------+-------------------------------+
+| STAGE 1           | STAGE 2           | STAGE 3 & 4           | STAGE 5, 6 & 7                |
+| Absolute Beginner | Intermediate Core | Advanced Query & Index| Expert Scale & Staff Arch     |
++-------------------+-------------------+-----------------------+-------------------------------+
+| • What is NoSQL?  | • WiredTiger Arch | • Aggregation Pipeline| • Multi-Doc ACID Transact.    |
+| • BSON Documents  | • Cache & Evict.  | • $match, $group, $lkp| • Sharded Clusters & Routers  |
+| • Collections     | • Checkpoints/WAL | • ESR Indexing Rule   | • Replica Sets & Oplog Sync   |
+| • insert, find    | • Document Schema | • Compound & Multikey | • Mongoose 8 Middleware       |
+| • update, delete  | • Relationships   | • explain() Analysis  | • 40 Staff Interview Q&A      |
++-------------------+-------------------+-----------------------+-------------------------------+
+```
 
 ---
 
-## 1. Executive Overview & Core Architecture
+## Table of Contents
+
+1. [Stage 1: Absolute Beginner Foundations](#1-stage-1-absolute-beginner-foundations)
+   - [What is MongoDB? Relational vs Document Databases](#what-is-mongodb-relational-vs-document-databases)
+   - [BSON vs JSON: The Binary Document Model](#bson-vs-json-the-binary-document-model)
+   - [Connecting via `mongosh` & Essential CLI Commands](#connecting-via-mongosh--essential-cli-commands)
+   - [The `_id` Field & `ObjectId` Anatomy](#the-_id-field--objectid-anatomy)
+   - [Basic CRUD Operations: `insertOne`, `find`, `updateOne`, `deleteOne`](#basic-crud-operations-insertone-find-updateone-deleteone)
+   - [Query Operators & Filtering: `$gt`, `$in`, `$and`, `$or`](#query-operators--filtering-gt-in-and-or)
+   - [Projections, Sorting & Pagination (`sort`, `skip`, `limit`)](#projections-sorting--pagination-sort-skip-limit)
+2. [Stage 2: Intermediate Core & WiredTiger Engine Architecture](#2-stage-2-intermediate-core--wiredtiger-engine-architecture)
+   - [Executive Overview & Core Architecture](#executive-overview--core-architecture)
+   - [WiredTiger Storage Engine Deep Dive](#wiredtiger-storage-engine-deep-dive)
+   - [In-Memory Cache & Hazard Pointers](#in-memory-cache--hazard-pointers)
+   - [Write-Ahead Logging (WAL) & 60-Second Checkpoints](#write-ahead-logging-wal--60-second-checkpoints)
+3. [Stage 3: Aggregation Framework Masterclass](#3-stage-3-aggregation-framework-masterclass)
+   - [Pipeline Stages: `$match`, `$group`, `$project`, `$unwind`](#pipeline-stages-match-group-project-unwind)
+   - [Multi-Collection Joining with `$lookup`](#multi-collection-joining-with-lookup)
+   - [Faceted Search & Analytics with `$facet`](#faceted-search--analytics-with-facet)
+4. [Stage 4: Indexing Architecture & The ESR Performance Rule](#4-stage-4-indexing-architecture--the-esr-performance-rule)
+   - [The Equality, Sort, Range (ESR) Golden Rule](#the-equality-sort-range-esr-golden-rule)
+   - [Compound, Multikey & Partial Indexes](#compound-multikey--partial-indexes)
+   - [Query Plan Analysis with `explain("executionStats")`](#query-plan-analysis-with-explainexecutionstats)
+5. [Stage 5: Data Modeling & Multi-Document ACID Transactions](#5-stage-5-data-modeling--multi-document-acid-transactions)
+   - [Embedding vs Referencing Design Patterns](#embedding-vs-referencing-design-patterns)
+   - [Multi-Document ACID Transactions](#multi-document-acid-transactions)
+   - [Distributed Consistency & Read/Write Concerns](#distributed-consistency--readwrite-concerns)
+6. [Stage 6: Replication, Sharding & Mongoose 8 ODM](#6-stage-6-replication-sharding--mongoose-8-odm)
+   - [Replica Sets, Election Protocols & Oplog Mechanics](#replica-sets-election-protocols--oplog-mechanics)
+   - [Sharded Cluster Topology: `mongos`, Config Servers & Shards](#sharded-cluster-topology-mongos-config-servers--shards)
+   - [Enterprise Mongoose 8 Architecture & TypeScript Types](#enterprise-mongoose-8-architecture--typescript-types)
+7. [Stage 7: Staff & Principal MongoDB Interview Masterclass & Sandbox](#7-stage-7-staff--principal-mongodb-interview-masterclass--sandbox)
+
+---
+
+## 1. Stage 1: Absolute Beginner Foundations
+
+### What is MongoDB? Relational vs Document Databases
+
+**MongoDB** is a document-oriented **NoSQL database** engineered for agility, horizontal scale, and rapid iteration. Unlike relational databases (MySQL, PostgreSQL) that enforce rigid tabular schemas with fixed column types, MongoDB stores data in dynamic, self-describing **Documents**:
+
+```text
++---------------------------+-----------------------------------+
+| Relational Concept (SQL)  | MongoDB Concept (NoSQL)           |
++---------------------------+-----------------------------------+
+| Database                  | Database                          |
+| Table                     | Collection                        |
+| Row (Tuple)               | Document (BSON)                   |
+| Column                    | Field (Key-Value Pair)            |
+| Primary Key               | `_id` Field (Default ObjectId)    |
+| JOIN                      | `$lookup` or Embedded Documents   |
++---------------------------+-----------------------------------+
+```
+
+---
+
+### BSON vs JSON: The Binary Document Model
+
+While you interact with MongoDB using familiar **JSON** (JavaScript Object Notation) syntax, MongoDB physically encodes and stores records as **BSON** (Binary JSON):
+1. **Rich Types**: JSON only supports strings, numbers, booleans, arrays, and null. BSON adds high-precision integers (`int32`, `int64`), exact floating-point numbers (`Decimal128`), dates (`ISODate`), binary byte buffers, and regular expressions.
+2. **Speed & Traversability**: BSON encodes field length prefixes, allowing the database engine to skip past nested subdocuments without decoding every byte sequentially.
+
+```json
+{
+  "_id": "65e8b4e72a88437f191b2c4e",
+  "name": "Alex Johnson",
+  "email": "alex@example.com",
+  "age": 31,
+  "isActive": true,
+  "tags": ["developer", "cloud"],
+  "address": {
+    "city": "Seattle",
+    "country": "USA"
+  },
+  "createdAt": "2026-03-01T10:00:00.000Z"
+}
+```
+
+---
+
+### Connecting via `mongosh` & Essential CLI Commands
+
+Connect to MongoDB using the modern command-line shell **`mongosh`**:
+
+```bash
+# Connect to local default instance (port 27017)
+mongosh
+
+# Connect to a secured cluster with authentication
+mongosh "mongodb://myuser:mypass@localhost:27017/my_database?authSource=admin"
+```
+
+Inside `mongosh`, execute everyday operational commands:
+
+```javascript
+// Show available databases
+show dbs
+
+// Switch to (or automatically create) a database
+use store_db
+
+// Show collections inside current database
+show collections
+
+// Inspect cluster topology status
+rs.status()
+```
+
+---
+
+### The `_id` Field & `ObjectId` Anatomy
+
+Every document stored in MongoDB must have a unique immutable primary key named **`_id`**. If you omit `_id` during insertion, MongoDB automatically generates a 12-byte **`ObjectId`**:
+
+```text
++-------------------------------------------------------------------------+
+|                        12-BYTE OBJECTID ANATOMY                         |
++--------------------------+-----------------------+----------------------+
+| 4-Byte Timestamp         | 5-Byte Random Value   | 3-Byte Counter       |
+| (Seconds since Unix epoch| (Process/Machine ID)  | (Incrementing count) |
++--------------------------+-----------------------+----------------------+
+```
+
+Because the first 4 bytes contain the Unix creation timestamp, `ObjectId` values are naturally roughly sorted by insertion time! You can extract the creation timestamp anytime:
+
+```javascript
+const docId = ObjectId("65e8b4e72a88437f191b2c4e");
+console.log(docId.getTimestamp()); // 2024-03-06T18:22:31.000Z
+```
+
+---
+
+### Basic CRUD Operations: `insertOne`, `find`, `updateOne`, `deleteOne`
+
+```javascript
+// 1. CREATE (Insert)
+db.products.insertOne({
+  title: "Mechanical Keyboard",
+  price: 129.99,
+  stock: 45,
+  inStock: true
+});
+
+// Insert multiple documents at once
+db.products.insertMany([
+  { title: "Wireless Mouse", price: 69.50, stock: 120 },
+  { title: "USB-C Hub", price: 34.00, stock: 15 }
+]);
+
+// 2. READ (Find)
+// Find all documents
+db.products.find();
+
+// Find matching filter
+db.products.find({ inStock: true });
+
+// 3. UPDATE
+// Update first matching document using $set operator
+db.products.updateOne(
+  { title: "Mechanical Keyboard" },
+  { $set: { price: 119.99 }, $inc: { stock: -1 } }
+);
+
+// 4. DELETE
+// Delete single document
+db.products.deleteOne({ title: "USB-C Hub" });
+```
+
+---
+
+### Query Operators & Filtering: `$gt`, `$in`, `$and`, `$or`
+
+MongoDB query filters use dedicated query operators prefixed with `$`:
+
+```javascript
+// Comparison operators: $gt, $gte, $lt, $lte, $ne, $in
+db.products.find({
+  price: { $gte: 50, $lte: 150 },
+  stock: { $gt: 0 }
+});
+
+// Membership test with $in
+db.products.find({
+  category: { $in: ["Electronics", "Computers"] }
+});
+
+// Logical OR conditions
+db.products.find({
+  $or: [
+    { price: { $lt: 40 } },
+    { stock: { $gt: 100 } }
+  ]
+});
+```
+
+---
+
+### Projections, Sorting & Pagination (`sort`, `skip`, `limit`)
+
+```javascript
+// Projection: 1 includes field, 0 excludes field (only fetch title and price)
+db.products.find(
+  { inStock: true },
+  { title: 1, price: 1, _id: 0 }
+)
+// Sort by price descending (-1) or ascending (1)
+.sort({ price: -1 })
+// Skip first 10 documents and take next 5 (Pagination Page 2, Page Size 5)
+.skip(10)
+.limit(5);
+```
+
+---
+
+## 2. Stage 2: Intermediate Core & WiredTiger Engine Architecture
+
+---
+
+### Executive Overview & Core Architecture
 
 MongoDB is a document-oriented, distributed NoSQL database designed for horizontal scalability, high availability, and developer agility. Documents are stored in **BSON** (Binary JSON) format, allowing rich embedded hierarchical data structures, flexible schemas, and zero-impedance object-relational mapping.
 
@@ -72,7 +291,7 @@ While JSON is human-readable text, MongoDB uses **BSON** internally and on the w
 
 ---
 
-## 2. WiredTiger Storage Engine Deep Dive
+### WiredTiger Storage Engine Deep Dive
 
 WiredTiger has been the default storage engine since MongoDB 3.2. Understanding its memory management and persistence pipeline is essential for diagnosing latency spikes and memory starvation.
 
@@ -88,7 +307,11 @@ The remaining host memory is dedicated to OS page cache, query execution sorting
 - **Eviction Triggers**: Background eviction threads monitor dirty and clean memory thresholds:
   - When cache utilization crosses 80%, background eviction begins.
   - When dirty cache crosses 20%, background threads aggressively flush dirty pages.
-  - When cache exceeds 95%, application threads are stalled and forced to assist with eviction, causing severe query latency spikes.\n\n## 3. Installation, Setup & Quickstart
+  - When cache exceeds 95%, application threads are stalled and forced to assist with eviction, causing severe query latency spikes.
+
+---
+
+## 3. Installation, Setup & Quickstart
 
 ### Prerequisites
 - Node.js >= 20.x
@@ -139,7 +362,7 @@ docker run -p 3000:3000 -e PORT=3000 learn-mongodb:latest
 
 ---
 
-## 4. CRUD Operations & Query Operators
+### Intermediate Query Operators & Array Filtering
 
 MongoDB provides expressive querying capabilities with support for field comparison, logical evaluation, element projection, array inspection, and atomic update operators.
 
@@ -220,7 +443,11 @@ MongoDB provides expressive querying capabilities with support for field compari
     { $set: { 'scores.$[elem].curved': true } },
     { arrayFilters: [{ 'elem.score': { $lt: 70 } }] }
   );
-  ```\n\n## 5. Aggregation Framework Masterclass
+  ```
+
+---
+
+## 3. Stage 3: Aggregation Framework Masterclass
 
 The **MongoDB Aggregation Framework** is a multi-stage data processing pipeline modeled on Unix pipes (`|`). Documents enter a multi-stage pipeline where each stage transforms the stream before passing results to the next.
 
@@ -315,7 +542,11 @@ db.products.aggregate([
 ### Pipeline Optimization Rules
 1. **Push Filters Early**: Always place `$match` and `$sort` stages at the very beginning of the pipeline. MongoDB's query planner automatically collapses `$match` into the initial collection scan/index scan.
 2. **Limit Projection Overhead**: If large documents with embedded payloads or images are present, project out unnecessary heavy fields early to minimize memory consumption between stages.
-3. **RAM Constraint (`allowDiskUse`)**: Pipeline stages have a default 100MB RAM limit per stage (in MongoDB 6.0+, sorting stages overflow to disk if needed, but explicit `{ allowDiskUse: true }` guarantees predictable behavior on multi-gigabyte queries).\n\n## 6. Indexing Architecture & The ESR Performance Rule
+3. **RAM Constraint (`allowDiskUse`)**: Pipeline stages have a default 100MB RAM limit per stage (in MongoDB 6.0+, sorting stages overflow to disk if needed, but explicit `{ allowDiskUse: true }` guarantees predictable behavior on multi-gigabyte queries).
+
+---
+
+## 4. Stage 4: Indexing Architecture & The ESR Performance Rule
 
 Indexes in MongoDB are stored as balanced B-Trees (B-Trees in WiredTiger maintain ordered pointer keys pointing directly to disk record IDs). Without indexes, every query results in a full collection scan (**COLLSCAN**), loading every block from disk into RAM.
 
@@ -408,7 +639,13 @@ db.users.find({ department: 'Engineering', age: { $gte: 25 } })
 Key Metrics to Check:
 - **`stage`**: You want to see `IXSCAN` (Index Scan) followed by `FETCH`, or ideally `PROJECTION_COVERED`. Red flags: `COLLSCAN` (full table scan) and `SORT` (in-memory blocking sort).
 - **`totalDocsExamined` vs `nReturned`**: In an optimal query, the ratio is **1.0** (every document fetched from disk was returned to the client). A ratio > 10.0 indicates missing or poorly ordered index keys.
-- **`totalKeysExamined`**: Number of B-tree entries traversed. If `totalKeysExamined` is much larger than `nReturned`, the index range is too wide.\n\n## 7. Data Modeling & Enterprise Schema Design Patterns
+- **`totalKeysExamined`**: Number of B-tree entries traversed. If `totalKeysExamined` is much larger than `nReturned`, the index range is too wide.
+
+---
+
+## 5. Stage 5: Data Modeling & Multi-Document ACID Transactions
+
+### Data Modeling & Enterprise Schema Design Patterns
 
 In document databases, schema design is governed by **application access patterns** rather than theoretical third normal form (3NF). Data that is queried together should be stored together.
 
@@ -465,7 +702,7 @@ In document databases, schema design is governed by **application access pattern
 
 ---
 
-## 8. Transactions, ACID & Distributed Consistency
+### Transactions, ACID & Distributed Consistency
 
 Since version 4.0 (replica sets) and 4.2 (sharded clusters), MongoDB supports full **Multi-Document ACID Transactions** across multiple collections, databases, and shards.
 
@@ -537,7 +774,13 @@ Specifies the level of acknowledgement requested from MongoDB for write operatio
 - **`primaryPreferred`**: Reads from Primary if available, otherwise Secondaries.
 - **`secondary`**: All reads go to Secondaries (offloading read traffic, eventual consistency).
 - **`secondaryPreferred`**: Reads from Secondaries, falling back to Primary.
-- **`nearest`**: Reads from the member with the lowest network latency.\n\n## 9. Replication, High Availability & Sharded Clusters
+- **`nearest`**: Reads from the member with the lowest network latency.
+
+---
+
+## 6. Stage 6: Replication, Sharding & Mongoose 8 ODM
+
+### Replication, High Availability & Sharded Clusters
 
 ### Replica Set Architecture
 A **Replica Set** in MongoDB is a cluster of `mongod` instances that maintain the exact same dataset, providing high availability, redundancy, and automated failover.
@@ -599,7 +842,7 @@ The shard key determines how documents are distributed across shards:
 
 ---
 
-## 10. Mongoose 8+ ODM Integration
+### Mongoose 8+ ODM Integration
 
 Mongoose provides schema-based modeling for MongoDB with type inference, lifecycle hooks, and validation.
 
@@ -648,7 +891,7 @@ export const Customer: Model<ICustomer> = mongoose.model<ICustomer>('Customer', 
 
 ---
 
-## 11. Production Hardening, Security & Operations
+### Production Hardening, Security & Operations
 
 ### Authentication & Authorization (RBAC)
 - **SCRAM (Salted Challenge Response)**: Default authentication mechanism (`SCRAM-SHA-256`) preventing plaintext password transmission.
@@ -676,7 +919,13 @@ export const Customer: Model<ICustomer> = mongoose.model<ICustomer>('Customer', 
   mongodump --uri="mongodb://localhost:27017/learn-mongodb" --out=/backup/$(date +%F)
   mongorestore --uri="mongodb://localhost:27017/learn-mongodb" /backup/2024-03-01/learn-mongodb
   ```
-- **Physical Continuous Snapshots**: In enterprise and Atlas deployments, disk volume snapshots with point-in-time recovery (PITR) replay the oplog to restore the exact state to any second.\n\n## 12. 40 Senior MongoDB Interview Questions & In-Depth Answers
+- **Physical Continuous Snapshots**: In enterprise and Atlas deployments, disk volume snapshots with point-in-time recovery (PITR) replay the oplog to restore the exact state to any second.
+
+---
+
+## 7. Stage 7: Staff & Principal MongoDB Interview Masterclass & Sandbox
+
+### 40 Senior MongoDB Interview Questions & In-Depth Answers
 
 <details>
 <summary><strong>Q1: What is the difference between BSON and JSON, and why does MongoDB use BSON?</strong></summary>
@@ -976,7 +1225,7 @@ The query engine resolves the request entirely within RAM from the B-tree index 
 
 ---
 
-## 13. Comprehensive MongoDB Query & Aggregation Cheat Sheet
+### Comprehensive MongoDB Query & Aggregation Cheat Sheet
 
 ### Basic Queries & Filters
 ```javascript
@@ -1058,7 +1307,7 @@ db.users.find({ department: 'Engineering' }).explain('executionStats');
 
 ---
 
-## 14. Contributing, Governance & Support
+### Contributing, Governance & Support
 
 Contributions are warmly welcomed! Please follow these steps:
 1. Fork the repository and create a feature branch (`git checkout -b feat/aggregation-stage`).
@@ -1076,4 +1325,4 @@ Created and maintained with precision by **Manthan Ankolekar**.
 ---
 
 ### License
-This project is licensed under the [ISC License](LICENSE).\n
+This project is licensed under the [ISC License](LICENSE).
