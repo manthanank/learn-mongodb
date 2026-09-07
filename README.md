@@ -568,6 +568,158 @@ db.products.aggregate([
 
 ---
 
+
+---
+
+## 3.5 The Complete Aggregation Pipeline Stage Encyclopedia
+
+The MongoDB Aggregation Framework models data transformations as multi-stage pipelines where documents enter a multi-stage pipeline that transforms the documents into aggregated results.
+
+```mermaid
+flowchart LR
+    RawDocs["Raw Collection (1M Docs)"] --> M["$match (Filters with Index Scan)"]
+    M --> U["$unwind (Flattens nested arrays)"]
+    U --> G["$group (Calculates metrics by key)"]
+    G --> P["$project (Reshapes final JSON document)"]
+    P --> Out["$merge / $out (Stores into Materialized View)"]
+```
+
+### 3.5.1 Atomic Breakdown of Essential Pipeline Stages
+
+#### 1. `$match` & `$project`
+```javascript
+// Filter active orders from 2026 and compute profit margin on the fly
+db.orders.aggregate([
+  {
+    $match: {
+      status: "COMPLETED",
+      orderDate: { $gte: ISODate("2026-01-01") }
+    }
+  },
+  {
+    $project: {
+      orderId: 1,
+      customerEmail: "$customer.email",
+      totalRevenue: "$total",
+      profitMargin: {
+        $round: [
+          { $multiply: [{ $divide: [{ $subtract: ["$total", "$cost"] }, "$total"] }, 100] },
+          2
+        ]
+      }
+    }
+  }
+]);
+```
+
+#### 2. `$unwind`: Array Deconstruction
+```javascript
+// Flattens items array so each item becomes an independent top-level document
+db.orders.aggregate([
+  { $unwind: "$items" },
+  {
+    $group: {
+      _id: "$items.sku",
+      unitsSold: { $sum: "$items.quantity" },
+      totalGross: { $sum: { $multiply: ["$items.price", "$items.quantity"] } }
+    }
+  },
+  { $sort: { totalGross: -1 } },
+  { $limit: 5 }
+]);
+```
+
+#### 3. `$lookup`: Correlated Sub-Pipeline Joins
+```javascript
+// Joins reviews into products with complex filtering inside the sub-pipeline
+db.products.aggregate([
+  {
+    $lookup: {
+      from: "reviews",
+      let: { productId: "$_id" },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $eq: ["$productId", "$$productId"] },
+                { $gte: ["$rating", 4] } // Join only 4-star and 5-star reviews!
+              ]
+            }
+          }
+        },
+        { $sort: { createdAt: -1 } },
+        { $limit: 3 }
+      ],
+      as: "topPositiveReviews"
+    }
+  }
+]);
+```
+
+#### 4. `$facet`: Multi-Faceted E-Commerce Search in a Single Query
+```javascript
+// Simultaneously computes price histogram, brand counts, and paginated items in 1 query!
+db.products.aggregate([
+  { $match: { category: "Electronics" } },
+  {
+    $facet: {
+      // Facet 1: Price Buckets
+      priceBuckets: [
+        {
+          $bucket: {
+            groupBy: "$price",
+            boundaries: [0, 50, 150, 500, 2000],
+            default: "Over $2000",
+            output: { count: { $sum: 1 } }
+          }
+        }
+      ],
+      // Facet 2: Brand Distribution
+      brandCounts: [
+        { $group: { _id: "$brand", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 5 }
+      ],
+      // Facet 3: Paginated Results
+      paginatedResults: [
+        { $sort: { rating: -1 } },
+        { $skip: 0 },
+        { $limit: 10 }
+      ]
+    }
+  }
+]);
+```
+
+---
+
+### 3.5.2 Complete MongoDB Update Operators Reference
+```javascript
+// Atomic field modifications and array manipulations
+db.users.updateOne(
+  { _id: ObjectId("65e0123456789abcdef01234") },
+  {
+    // Scalar modifiers
+    $set: { "profile.bio": "Full-Stack Software Architect" },
+    $inc: { "stats.loginCount": 1, "wallet.balance": -15.50 },
+    $min: { "stats.fastestResponseMs": 45 },
+    $max: { "stats.peakConcurrentUsers": 1200 },
+    $currentDate: { updatedAt: true },
+
+    // Array modifiers
+    $addToSet: { roles: "ADMIN" }, // Adds only if not already present!
+    $push: {
+      recentLogins: {
+        $each: [new Date()],
+        $slice: -10 // Keeps only the 10 most recent entries!
+      }
+    }
+  }
+);
+```
+
+
 ## 4. Stage 4: Indexing Architecture & The ESR Performance Rule
 
 Indexes in MongoDB are stored as balanced B-Trees (B-Trees in WiredTiger maintain ordered pointer keys pointing directly to disk record IDs). Without indexes, every query results in a full collection scan (**COLLSCAN**), loading every block from disk into RAM.
@@ -944,6 +1096,138 @@ export const Customer: Model<ICustomer> = mongoose.model<ICustomer>('Customer', 
 - **Physical Continuous Snapshots**: In enterprise and Atlas deployments, disk volume snapshots with point-in-time recovery (PITR) replay the oplog to restore the exact state to any second.
 
 ---
+
+
+#### Q26: What is the WiredTiger Cache and how does its eviction algorithm work?
+> **Answer**:
+> WiredTiger maintains an in-memory cache sized by default to:
+> $$\text{WiredTiger Cache} = \max(500\text{MB}, 0.5 \times (\text{Total RAM} - 1\text{GB}))$$
+> Pages are held in memory in uncompressed format. When cache usage exceeds the dirty target ($5\%\text{--}20\%$) or maximum threshold ($80\%$), background eviction server threads compress dirty pages and write them to disk. If cache fills to $95\%$, client application threads are forced to perform evictions, causing severe query latency spikes.
+
+#### Q27: How does MongoDB guarantee ACID Transactions across multiple documents and shards?
+> **Answer**:
+> - **Replica Set Transactions (MongoDB 4.0+)**: Uses WiredTiger's storage engine snapshots. The primary holds locks and buffers write operations in memory until `commitTransaction()`, where the changes are atomically applied and written to the `oplog`.
+> - **Sharded Cluster Transactions (MongoDB 4.2+)**: Uses a **Two-Phase Commit (2PC)** protocol coordinated by the `mongos` router across participating shard primaries.
+
+#### Q28: What is the difference between `w: "majority"` and `w: 1` write concerns?
+> **Answer**:
+> - `w: 1`: Returns acknowledgment as soon as the Primary has written the document to its local memory/journal. Fast, but vulnerable to data loss if the primary crashes before replicating to secondaries.
+> - `w: "majority"`: Blocks acknowledgment until a strict mathematical majority ($>50\%$) of voting replica set members have committed the write to their memory/journal, guaranteeing that the committed write cannot be rolled back upon primary failover.
+
+#### Q29: What is a Rolled-Back Write in MongoDB and where are they stored?
+> **Answer**:
+> If a Primary accepts a write under `w: 1` and abruptly crashes before secondaries replicate it, a new Primary is elected. When the old Primary rejoins as a secondary, it realizes its local data diverged from the new Primary. It rolls back the un-replicated writes and writes the discarded BSON documents to disk in the `rollback/` directory (`<collection>.<timestamp>.bson`).
+
+#### Q30: What is the ESR (Equality, Sort, Range) Indexing Rule?
+> **Answer**:
+> When designing compound indexes for queries containing equality, sorting, and range conditions:
+> 1. **Equality (`E`)**: Place exact-match fields first (`{ status: "ACTIVE" }`).
+> 2. **Sort (`S`)**: Place sort fields second (`{ createdAt: -1 }`). This allows the database to return rows in pre-sorted B-Tree order without performing an in-memory sort!
+> 3. **Range (`R`)**: Place range fields last (`{ age: { $gte: 21 } }`).
+
+#### Q31: What is an In-Memory Sort in MongoDB and why must it be avoided?
+> **Answer**:
+> If a query's `sort()` condition cannot use an index, MongoDB must load all matching documents into RAM and sort them. MongoDB enforces a strict **$100\text{MB}$ memory limit** on in-memory sorts (or $32\text{MB}$ in older versions). If exceeded without `allowDiskUse: true`, the query crashes with an error.
+
+#### Q32: What is a Covered Query in MongoDB?
+> **Answer**:
+> A query is covered when:
+> 1. All fields in the query predicate (`find()`) are part of an index.
+> 2. All fields returned in the projection (`project`) are part of the same index.
+> 3. The `_id` field is explicitly suppressed (`{ _id: 0 }`).
+> MongoDB resolves the query directly from the WiredTiger index B-Tree without fetching documents from disk, achieving maximum throughput.
+
+#### Q33: How does Read Preference work in MongoDB Replica Sets?
+> **Answer**:
+> - `primary` (Default): All reads go strictly to Primary. Guaranteed read-your-own-writes consistency.
+> - `primaryPreferred`: Reads from Primary; falls back to Secondaries during primary election failover.
+> - `secondary`: All reads routed to Secondaries. Good for offloading heavy analytics, but subject to replication lag (stale reads).
+> - `secondaryPreferred`: Reads from Secondaries; falls back to Primary if no secondaries are available.
+> - `nearest`: Measures network ping latency and routes to the closest node regardless of role.
+
+#### Q34: What is Read Concern `majority` versus `linearizable`?
+> **Answer**:
+> - `readConcern: "majority"`: Returns data that has been acknowledged by a majority of nodes (immune to rollbacks). Reads from an in-memory snapshot.
+> - `readConcern: "linearizable"`: The primary checks in real time with a majority of nodes before returning the response to ensure it hasn't been deposed in a network partition split-brain. Guarantees true real-time serializability at the expense of network latency.
+
+#### Q35: What is the Oplog and how does MongoDB replication work?
+> **Answer**:
+> The `oplog.rs` (Operations Log) is a capped collection in the `local` database on every replica set member. When writes occur on the Primary, it records idempotent transformation instructions. Secondary nodes continuously tail the Primary's oplog using tailable cursors and apply changes locally in parallel.
+
+#### Q36: How does Sharding work in MongoDB?
+> **Answer**:
+> A sharded cluster consists of:
+> 1. **`mongos` Query Routers**: Stateless gateways that parse client queries and route them to target shards.
+> 2. **Config Database (Replica Set)**: Stores cluster metadata and shard key chunk ranges.
+> 3. **Shards (Replica Sets)**: Independent database clusters storing subsets of data partitioned by **Shard Key**.
+
+#### Q37: What is the difference between Ranged Sharding and Hashed Sharding?
+> **Answer**:
+> - **Ranged Sharding**: Partitions by contiguous values of the shard key. Excellent for range queries (`$gte`, `$lte`), but vulnerable to hotspotting if the shard key is monotonically increasing (e.g. `_id` or timestamp, where all new writes hit a single shard).
+> - **Hashed Sharding**: Hashes the shard key with MD5. Distributes writes uniformly across all shards, eliminating write hotspots, but forces all range queries to scatter-gather across the entire cluster.
+
+#### Q38: What is a Scatter-Gather Query in a Sharded Cluster?
+> **Answer**:
+> When a client executes a query that does NOT include the Shard Key in its filter, the `mongos` router cannot deduce which shard holds the data. It is forced to broadcast ("scatter") the query to **every single shard in the cluster**, collect the results ("gather"), and merge them in memory, creating severe network and CPU bottlenecks.
+
+#### Q39: What are Change Streams in MongoDB?
+> **Answer**:
+> Change Streams allow applications to subscribe to real-time data changes on a collection, database, or entire deployment. Built on top of the oplog with resume tokens, Change Streams automatically notify backend services when documents are inserted, updated, or deleted.
+
+#### Q40: What is a Capped Collection?
+> **Answer**:
+> A fixed-size circular collection that preserves insertion order. When the allocated disk quota is reached, MongoDB automatically overwrites the oldest documents without index fragmentation or file system allocation overhead. Used for high-throughput audit logs and caching.
+
+#### Q41: What is a TTL (Time-To-Live) Index?
+> **Answer**:
+> A single-field index on a date field with the `expireAfterSeconds` option. A background thread running every 60 seconds scans the index and automatically purges expired documents from the collection. Ideal for user sessions, auth tokens, and temporary verification codes.
+
+#### Q42: What is the Difference between `$addToSet` and `$push`?
+> **Answer**:
+> - `$push`: Appends the value to the array unconditionally, allowing duplicates.
+> - `$addToSet`: Treats the array as a mathematical set; appends the value only if it does not already exist in the array.
+
+#### Q43: What is the 16MB Document Size Limit in MongoDB and how do you handle larger data?
+> **Answer**:
+> Single BSON documents are capped at $16\text{MB}$ to prevent excessive RAM consumption and network serialization latency. To store files or datasets exceeding 16MB:
+> 1. Use **GridFS**: Splits files into $255\text{KB}$ binary chunks stored across two collections (`fs.files` and `fs.chunks`).
+> 2. Use Object Storage (AWS S3 / GCS) and store the S3 URL in the MongoDB document.
+
+#### Q44: What is the Bucket Pattern in IoT and Time-Series Data Modeling?
+> **Answer**:
+> Storing 1 document per second for 1,000 sensors produces 86.4 million documents daily, ballooning index and BSON overhead. The Bucket Pattern aggregates readings for a time window (e.g., 1 hour) into an array inside a single document: `{ sensorId: 1, hour: ISODate(...), readings: [{ t: 1, v: 24.5 }, ...] }`, reducing document count by $3600\times$ and improving query cache locality.
+
+#### Q45: What is the Outlier Pattern in MongoDB?
+> **Answer**:
+> Used when most documents have small arrays (e.g. a book having 20 reviews), but a rare "outlier" has 100,000 reviews (e.g. Harry Potter). Storing all reviews embedded blows past the 16MB limit.
+> - **Remediation**: Embed reviews up to 100 in the main document and set an `hasOverflow: true` flag. Outlier reviews beyond 100 are stored in a separate `reviews` collection.
+
+#### Q46: What is a Partial Index vs Sparse Index?
+> **Answer**:
+> - **Sparse Index**: Indexes only documents that contain the indexed field, but does not support filtering expressions.
+> - **Partial Index (Recommended)**: Indexes only documents matching a specified filter expression (`partialFilterExpression: { rating: { $gt: 4 } }`). Consumes less disk space and memory while speeding up filtered queries.
+
+#### Q47: What is the Collation feature in MongoDB?
+> **Answer**:
+> Collation allows language-specific rules for string comparison and sorting (lettercase, accent marks). Specifying `{ locale: "en", strength: 2 }` performs case-insensitive and accent-insensitive index comparisons.
+
+#### Q48: What is the difference between `$merge` and `$out` in aggregation?
+> **Answer**:
+> - `$out`: Replaces the entire target collection with the aggregation output. Destructive; drops existing indexes and data.
+> - `$merge` (MongoDB 4.2+): Flexible output stage. Can output to existing collections, across databases, or on sharded collections. Supports `whenMatched: "replace" | "keepExisting" | "merge"`, enabling incremental materialized views!
+
+#### Q49: What is MongoDB Atlas Search?
+> **Answer**:
+> Atlas Search embeds an Apache Lucene full-text search engine directly alongside the MongoDB WiredTiger database, enabling fuzzy search, autocompletion, facet filtering, and relevance scoring without syncing data to external Elasticsearch clusters.
+
+#### Q50: How do you architect a multi-region MongoDB deployment for zero-downtime disaster recovery?
+> **Answer**:
+> Deploy a 5-node replica set distributed across 3 Availability Zones or cloud regions:
+> - Region 1 (Primary Datacenter): 2 voting data nodes (Priority 2 and 1).
+> - Region 2 (Secondary Datacenter): 2 voting data nodes (Priority 0.5).
+> - Region 3 (Quorum Tiebreaker): 1 lightweight Arbiter or voting node.
+> If Region 1 experiences a total datacenter outage, Region 2 and Region 3 form a majority (3 out of 5 votes), automatically elect a new Primary in Region 2, and resume serving traffic in under 5 seconds.
+
 
 ## 7. Stage 7: Staff & Principal MongoDB Interview Masterclass & Sandbox
 
