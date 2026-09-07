@@ -1,3 +1,12 @@
+# [2.2.0](https://github.com/manthanank/learn-mongodb/compare/v2.1.0...v2.2.0) (2026-09-07)
+
+
+### Features
+
+* **mongodb:** expand to exhaustive encyclopedia with 1,634 lines, aggregation pipeline guide and 50 interview Q&As ([098287b](https://github.com/manthanank/learn-mongodb/commit/098287b6bea2756c6167e729aa9f36c5bc01f0af))
+
+
+
 # [2.1.0](https://github.com/manthanank/learn-mongodb/compare/v1.15.0...v2.1.0) (2026-09-05)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * Create CONTRIBUTING.md ([3fc72ab](https://github.com/manthanank/learn-mongodb/commit/3fc72abc6c46c095146227d255fe8dd51963ddd5))
-
-
-
-# [1.12.0](https://github.com/manthanank/learn-mongodb/compare/v1.11.0...v1.12.0) (2024-02-04)
-
-
-### Features
-
-* Delete CONTRIBUTING.md ([06e919e](https://github.com/manthanank/learn-mongodb/commit/06e919e76f914c18e4b57f6fe967818dc52a0e86))
 
 
 
